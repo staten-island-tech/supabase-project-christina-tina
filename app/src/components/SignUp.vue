@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { reactive } from 'vue'
 import { useAuth } from '../composables/useAuth'
 import { supabase } from '../lib/supabaseClient'
 
