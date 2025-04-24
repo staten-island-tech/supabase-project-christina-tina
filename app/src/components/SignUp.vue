@@ -13,13 +13,16 @@ import { useAuth } from '../composables/useAuth'
 import { supabase } from '../lib/supabaseClient'
 import type { Ref } from 'vue'
 import type { User as SupabaseUser, Session } from '@supabase/supabase-js'
+import type { User } from '../types'
 
-interface User {
-  email: string
-  password: string
-}
-
-const user = reactive<User>({ email: '', password: '' })
+const user = reactive<User>({
+  email: '',
+  password: '',
+  username: '',
+  currency: 0,
+  score: 0,
+  items: [],
+})
 
 /* const {
   signUp,
