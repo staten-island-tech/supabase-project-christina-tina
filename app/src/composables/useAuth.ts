@@ -6,7 +6,7 @@ const user = ref<User | null>(null)
 const error = ref<string | null>(null)
 
 export function useAuth() {
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, username: string) => {
     const {
       data,
       error: signUpError,

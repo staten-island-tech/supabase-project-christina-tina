@@ -1,7 +1,8 @@
 <template>
   <div>
-    <input v-model="user.email" placeholder="Email" />
+    <input v-model="user.email" type="email" placeholder="Email" />
     <input v-model="user.password" type="password" placeholder="Password" />
+    <input v-model="user.username" type="text" placeholder="Username" />
     <button @click="handleSignUp">Sign Up</button>
     <p v-if="error">{{ error.value }}</p>
   </div>
@@ -38,6 +39,7 @@ const user = reactive<User>({
 const { signUp, error } = useAuth() // according to chatgpt not manually typing out the return of useAuth(), figure out later
 
 const handleSignUp = async () => {
-  await signUp(user.email, user.password)
+  await signUp(user.email, user.password, user.username)
+  await supabase.from('users').insert([{ id: signUpData.user.id, email: email.value }])
 }
 </script>
