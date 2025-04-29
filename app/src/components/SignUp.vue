@@ -1,21 +1,27 @@
 <template>
   <div>
-    <input v-model="user.email" type="email" placeholder="Email" />
-    <input v-model="user.password" type="password" placeholder="Password" />
-    <input v-model="user.username" type="text" placeholder="Username" />
+    <h2>Sign Up</h2>
+    <input v-model="form.email" type="email" placeholder="Email" />
+    <input v-model="form.password" type="password" placeholder="Password" />
+    <input v-model="form.username" type="text" placeholder="Username" />
     <button @click="signUp">Sign Up</button>
+
+    <h2>Log In</h2>
+    <input v-model="form.email" type="email" placeholder="Email" />
+    <input v-model="form.password" type="password" placeholder="Password" />
+    <button @click="logIn">Log In</button>
+
     <p v-if="message">{{ message }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-//import { useAuth } from '../composables/useAuth'
 import { supabase } from '../lib/supabaseClient'
 import type { Ref } from 'vue'
 import type { User } from '../types'
 
-const user = reactive<User>({
+const form = reactive<User>({
   email: '',
   password: '',
   username: '',
@@ -24,49 +30,69 @@ const user = reactive<User>({
   items: [],
 })
 const message = ref('')
+let profileInserted = ref(false)
 
 const signUp = async () => {
   message.value = ''
 
-  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-    email: user.email,
-    password: user.password,
+  const { error } = await supabase.auth.signUp({
+    email: form.email,
+    password: form.password,
   })
 
-  if (signUpError) {
-    message.value = `Sign up error: ${signUpError.message}`
+  if (error) {
+    message.value = `Sign up error: ${error.message}`
+  } else {
+    message.value = 'Sign up successful! Please check your email to confirm'
+  }
+}
+
+const logIn = async () => {
+  message.value = ''
+
+  const { data: loginData, error } = await supabase.auth.signInWithPassword({
+    email: form.email,
+    password: form.password,
+  })
+
+  if (error) {
+    message.value = `Login error: ${error.message}`
     return
   }
 
-  if (signUpData?.user) {
+  const user = loginData?.user
+  if (!user) {
+    message.value = 'No user found after login.'
+    return
+  }
+
+  const { data: existingUsers, error: fetchError } = await supabase
+    .from('users')
+    .select('id')
+    .eq('id', user.id)
+
+  if (fetchError) {
+    message.value = `Error checking user profile: ${fetchError.message}`
+    return
+  }
+
+  if (existingUsers && existingUsers.length === 0) {
     const { error: insertError } = await supabase.from('users').insert([
       {
-        id: signUpData.user.id,
-        username: user.username,
-        currency: user.currency,
-        score: user.score,
-        items: user.items,
+        id: user.id,
+        username: form.username,
       },
     ])
 
     if (insertError) {
       message.value = `Error saving user profile: ${insertError.message}`
+      return
     } else {
-      message.value = 'Sign up successful! Check your email to confirm.'
+      profileInserted.value = true
+      message.value = 'User logged in and profile created!'
     }
-  }
-}
-
-const checkLoggedIn = async () => {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-
-  if (session) {
-    console.log('User is logged in:', session.user)
   } else {
-    console.log('No user is logged in')
+    message.value = 'User already has a profile. Logged in!'
   }
 }
-checkLoggedIn()
 </script>
