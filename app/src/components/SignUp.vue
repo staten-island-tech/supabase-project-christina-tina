@@ -42,6 +42,7 @@ const signUp = async () => {
 
   if (error) {
     message.value = `Sign up error: ${error.message}`
+    return
   } else {
     message.value = 'Sign up successful! Please check your email to confirm'
   }
