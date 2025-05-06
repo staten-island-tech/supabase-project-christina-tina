@@ -14,7 +14,7 @@ const user = reactive<User>({
   items: [],
 })
 
-export function userProfile() {
+export async function userProfile() {
     const { data, error} = await supabase.from("users").select(`username`)
     if (error) {
         console.error('Error fetching data', error)
