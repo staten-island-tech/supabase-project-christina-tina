@@ -30,7 +30,6 @@ const form = reactive<User>({
   items: [],
 })
 const message = ref('')
-let profileInserted = ref(false)
 
 const signUp = async () => {
   message.value = ''
@@ -61,37 +60,35 @@ const logIn = async () => {
     return
   }
 
-  const user = loginData?.user
+  const user = loginData?.user //checks if there's user in loginData
   if (!user) {
     message.value = 'No user found after login.'
     return
   }
 
-  const { data: existingUsers, error: fetchError } = await supabase
+  const { data: existingUser, error: fetchError } = await supabase
     .from('users')
-    .select('id')
+    .select('id, username')
     .eq('id', user.id)
+    .single()
 
   if (fetchError) {
     message.value = `Error checking user profile: ${fetchError.message}`
     return
   }
+  console.log(form.username)
 
-  if (existingUsers && existingUsers.length === 0) {
-    const { error: insertError } = await supabase.from('users').insert([
-      {
-        id: user.id,
-        username: form.username,
-      },
-    ])
+  if (existingUser && !existingUser.username) {
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ username: form.username })
+      .eq('id', user.id)
 
-    if (insertError) {
-      message.value = `Error saving user profile: ${insertError.message}`
+    if (updateError) {
+      message.value = `Error updating user profile: ${updateError.message}`
       return
-    } else {
-      profileInserted.value = true
-      message.value = 'User logged in and profile created!'
     }
+    message.value = 'User logged in and profile updated!'
   } else {
     message.value = 'User already has a profile. Logged in!'
   }
