@@ -92,5 +92,6 @@ const logIn = async () => {
   } else {
     message.value = 'User already has a profile. Logged in!'
   }
+  console.log(form.username)
 }
 </script>
