@@ -9,6 +9,7 @@
     <h2>Log In</h2>
     <input v-model="form.email" type="email" placeholder="Email" />
     <input v-model="form.password" type="password" placeholder="Password" />
+    <input v-model="form.username" type="text" placeholder="Username" />
     <button @click="logIn">Log In</button>
 
     <p v-if="message">{{ message }}</p>
@@ -70,13 +71,13 @@ const logIn = async () => {
     .from('users')
     .select('id, username')
     .eq('id', user.id)
-    .single()
+    .maybeSingle() //why is this returning null
 
+  console.log(existingUser)
   if (fetchError) {
     message.value = `Error checking user profile: ${fetchError.message}`
     return
   }
-  console.log(form.username)
 
   if (existingUser && !existingUser.username) {
     const { error: updateError } = await supabase
