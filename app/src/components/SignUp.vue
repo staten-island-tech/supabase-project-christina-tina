@@ -73,7 +73,7 @@ const logIn = async () => {
     .eq('id', user.id)
     .single()
 
-  console.log(existingUser) // before inserting username
+  console.log(existingUser) // before inserting username (username still null)
   if (fetchError) {
     message.value = `Error checking user profile: ${fetchError.message}`
     return
@@ -93,5 +93,10 @@ const logIn = async () => {
   } else {
     message.value = 'User already has a profile. Logged in!'
   }
+}
+
+async function signOut() {
+  const { error } = await supabase.auth.signOut()
+  //user.value = null
 }
 </script>
