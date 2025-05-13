@@ -71,9 +71,9 @@ const logIn = async () => {
     .from('users')
     .select('id, username')
     .eq('id', user.id)
-    .maybeSingle() //why is this returning null
+    .single()
 
-  console.log(existingUser)
+  console.log(existingUser) // before inserting username
   if (fetchError) {
     message.value = `Error checking user profile: ${fetchError.message}`
     return
@@ -93,6 +93,5 @@ const logIn = async () => {
   } else {
     message.value = 'User already has a profile. Logged in!'
   }
-  console.log(form.username)
 }
 </script>
