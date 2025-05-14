@@ -21,6 +21,7 @@ import { ref, reactive } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 import type { Ref } from 'vue'
 import type { User } from '../types'
+import { useStore } from '../stores/userStatus'
 
 const form = reactive<User>({
   email: '',
@@ -31,6 +32,7 @@ const form = reactive<User>({
   items: [],
 })
 const message = ref('')
+const store = useStore()
 
 const signUp = async () => {
   message.value = ''
@@ -93,10 +95,16 @@ const logIn = async () => {
   } else {
     message.value = 'User already has a profile. Logged in!'
   }
+
+  store.$patch((state) => {
+    state.items.push({})
+  })
 }
 
 async function signOut() {
   const { error } = await supabase.auth.signOut()
-  //user.value = null
+  // reset user in store
+
+  store.$reset()
 }
 </script>

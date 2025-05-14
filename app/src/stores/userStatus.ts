@@ -12,7 +12,7 @@ export const useCounterStore = defineStore('counter', () => {
   return { count, doubleCount, increment }
 })
 
-export const useUserStore = defineStore('user', {
+export const useStore = defineStore('user', {
   state: () => {
     return {
       // for initially empty lists
