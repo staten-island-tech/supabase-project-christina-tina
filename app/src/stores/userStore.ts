@@ -19,6 +19,7 @@ export const useStore = defineStore('user', {
       userList: [] as UserInfo[],
       // for data that is not yet loaded
       user: null as UserInfo | null,
+      isSignedIn: false
     }
   },
 })

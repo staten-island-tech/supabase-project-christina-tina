@@ -21,7 +21,7 @@ import { ref, reactive } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 import type { Ref } from 'vue'
 import type { User } from '../types'
-import { useStore } from '../stores/userStatus'
+import { useStore } from '../stores/userStore'
 
 const form = reactive<User>({
   email: '',
