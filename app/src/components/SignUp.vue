@@ -22,6 +22,9 @@ import { supabase } from '../lib/supabaseClient'
 import type { Ref } from 'vue'
 import type { User } from '../types'
 import { useStore } from '../stores/userStore'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const form = reactive<User>({
   email: '',
@@ -96,15 +99,17 @@ const logIn = async () => {
     message.value = 'User already has a profile. Logged in!'
   }
 
-  store.$patch((state) => {
-    state.items.push({})
-  })
+  store.signIn(existingUser)
+  console.log(store.user, store.isSignedIn)
+
+  router.push('/dashboard')
 }
 
 async function signOut() {
   const { error } = await supabase.auth.signOut()
   // reset user in store
 
-  store.$reset()
+  store.signOut()
+  router.push
 }
 </script>
