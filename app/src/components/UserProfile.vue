@@ -52,8 +52,8 @@ async function getProfile() {
     const { user } = session.value
 
     const { data, error, status } = await supabase
-      .from('profiles')
-      .select(`username, surrency, score`)
+      .from('users')
+      .select(`username, currency, score`)
       .eq('id', user.id)
       .single()
 

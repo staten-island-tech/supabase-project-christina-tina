@@ -1,20 +1,27 @@
 <template>
     <div>   
-        <div>
-            
-        </div>
+        <div class="loader" v-if="!data"></div>
     </div>
 </template>
 
 <script setup>
 import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/composables/useAuth'; 
+import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
-const data = ref('')
+const router = useRouter()
+const data = ref(null)
 
-//Loading screen while getting data
-//Go to Home
+//fetch data
+while(data === null){
+    //...
+}
+
+if (data){
+    router.push('/')
+}
+
 
 </script>
 
