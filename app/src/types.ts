@@ -7,4 +7,4 @@ interface User {
     items: object[]
 }
 
-export type { User }
+export type {User}
