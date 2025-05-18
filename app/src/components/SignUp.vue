@@ -1,18 +1,12 @@
 <template>
   <div>
     <h2>Sign Up</h2>
-    <input v-model="form.email" type="email" placeholder="Email" />
-    <input v-model="form.password" type="password" placeholder="Password" />
-    <input v-model="form.username" type="text" placeholder="Username" />
+    <input v-model="signupForm.email" type="email" placeholder="Email" />
+    <input v-model="signupForm.password" type="password" placeholder="Password" />
+    <input v-model="signupForm.username" type="text" placeholder="Username" />
     <button @click="signUp">Sign Up</button>
 
-    <h2>Log In</h2>
-    <input v-model="form.email" type="email" placeholder="Email" />
-    <input v-model="form.password" type="password" placeholder="Password" />
-    <input v-model="form.username" type="text" placeholder="Username" />
-    <button @click="logIn">Log In</button>
-
-    <p v-if="message">{{ message }}</p>
+    <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
 </template>
 
@@ -26,7 +20,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const form = reactive<User>({
+const signupForm = reactive<User>({
   email: '',
   password: '',
   username: '',
@@ -34,82 +28,34 @@ const form = reactive<User>({
   score: 0,
   items: [],
 })
-const message = ref('')
+const errorMessage = ref<string>()
 const store = useStore()
 
-const signUp = async () => {
-  message.value = ''
+async function signUp() {
+  errorMessage.value = ''
 
-  const { error } = await supabase.auth.signUp({
-    email: form.email,
-    password: form.password,
+  const { data, error } = await supabase.auth.signUp({
+    email: signupForm.email,
+    password: signupForm.password,
   })
 
   if (error) {
-    message.value = `Sign up error: ${error.message}`
+    errorMessage.value = `Sign up error: ${error.message}`
     return
   } else {
-    message.value = 'Sign up successful! Please check your email to confirm'
+    errorMessage.value = 'Sign up successful! Please check your email to confirm'
   }
-}
+  // problem: can't insert username bc user is not signed in yet (no session) - either remove email confirmation in supabase OR save username locally somewhere and insert it in login OR use metadata and insert username with SQL
+  /* const user = data?.user
+  if (user) {
+    const { error: insertError } = await supabase.from('users').insert({
+      id: user.id,
+      username: signupForm.username,
+    })
 
-const logIn = async () => {
-  message.value = ''
-
-  const { data: loginData, error } = await supabase.auth.signInWithPassword({
-    email: form.email,
-    password: form.password,
-  })
-
-  if (error) {
-    message.value = `Login error: ${error.message}`
-    return
-  }
-
-  const user = loginData?.user //checks if there's user in loginData
-  if (!user) {
-    message.value = 'No user found after login.'
-    return
-  }
-
-  const { data: existingUser, error: fetchError } = await supabase
-    .from('users')
-    .select('id, username')
-    .eq('id', user.id)
-    .single()
-
-  console.log(existingUser) // before inserting username (username still null)
-  if (fetchError) {
-    message.value = `Error checking user profile: ${fetchError.message}`
-    return
-  }
-
-  if (existingUser && !existingUser.username) {
-    const { error: updateError } = await supabase
-      .from('users')
-      .update({ username: form.username })
-      .eq('id', user.id)
-
-    if (updateError) {
-      message.value = `Error updating user profile: ${updateError.message}`
-      return
+    if (insertError) {
+      errorMessage.value = `Username update error: ${insertError.message}`
     }
-    message.value = 'User logged in and profile updated!'
-  } else {
-    message.value = 'User already has a profile. Logged in!'
-  }
-
-  store.signIn(existingUser)
-  console.log(store.user, store.isSignedIn)
-
-  router.push('/dashboard')
-}
-
-async function signOut() {
-  const { error } = await supabase.auth.signOut()
-  // reset user in store
-
-  store.signOut()
-  router.push
+  } */
 }
 </script>

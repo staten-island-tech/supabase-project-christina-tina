@@ -1,7 +1,18 @@
+<script setup lang="ts">
+import { RouterLink, RouterView } from 'vue-router'
+</script>
+
 <template>
-  <SignUp />
+  <header>
+    <div class="wrapper">
+      <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/signin">Signin</RouterLink>
+      </nav>
+    </div>
+  </header>
+
+  <RouterView />
 </template>
 
-<script setup>
-import SignUp from './components/SignUp.vue'
-</script>
+<style scoped></style>
