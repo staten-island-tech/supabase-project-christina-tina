@@ -20,7 +20,7 @@
 import { ref, reactive } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 import type { Ref } from 'vue'
-import type { User } from '../types'
+import type { User } from '../types/types'
 import { useStore } from '../stores/userStore'
 import { useRouter } from 'vue-router'
 
