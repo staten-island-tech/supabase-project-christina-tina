@@ -1,18 +1,13 @@
 <template>
   <div>
     <h2>Sign Up</h2>
-    <input v-model="form.email" type="email" placeholder="Email" />
-    <input v-model="form.password" type="password" placeholder="Password" />
-    <input v-model="form.username" type="text" placeholder="Username" />
-    <button @click="signUp">Sign Up</button>
-
-    <h2>Log In</h2>
-    <input v-model="form.email" type="email" placeholder="Email" />
-    <input v-model="form.password" type="password" placeholder="Password" />
-    <input v-model="form.username" type="text" placeholder="Username" />
-    <button @click="logIn">Log In</button>
-
-    <p v-if="message">{{ message }}</p>
+    <form @submit.prevent="signUp">
+      <input v-model="signupForm.email" type="email" placeholder="Email" />
+      <input v-model="signupForm.password" type="password" placeholder="Password" />
+      <input v-model="signupForm.username" type="text" placeholder="Username" />
+      <button type="submit">Sign Up</button>
+    </form>
+    <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
 </template>
 
@@ -20,10 +15,13 @@
 import { ref, reactive } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 import type { Ref } from 'vue'
-import type { User } from '../types'
+import type { User } from '../types/types'
 import { useStore } from '../stores/userStore'
+import { useRouter } from 'vue-router'
 
-const form = reactive<User>({
+const router = useRouter()
+
+const signupForm = reactive<User>({
   email: '',
   password: '',
   username: '',
@@ -31,80 +29,40 @@ const form = reactive<User>({
   score: 0,
   items: [],
 })
-const message = ref('')
+const errorMessage = ref<string>()
 const store = useStore()
 
-const signUp = async () => {
-  message.value = ''
-
-  const { error } = await supabase.auth.signUp({
-    email: form.email,
-    password: form.password,
+async function signUp() {
+  errorMessage.value = ''
+  // check if username/email already exists; yes-direct to login or input smth diff, no-continue
+  const { data, error } = await supabase.auth.signUp({
+    email: signupForm.email,
+    password: signupForm.password,
+    options: {
+      data: {
+        username: signupForm.username,
+      },
+    },
   })
-
+  console.log('Supabase signup result:', { data, error })
   if (error) {
-    message.value = `Sign up error: ${error.message}`
-    return
-  } else {
-    message.value = 'Sign up successful! Please check your email to confirm'
-  }
-}
-
-const logIn = async () => {
-  message.value = ''
-
-  const { data: loginData, error } = await supabase.auth.signInWithPassword({
-    email: form.email,
-    password: form.password,
-  })
-
-  if (error) {
-    message.value = `Login error: ${error.message}`
-    return
-  }
-
-  const user = loginData?.user //checks if there's user in loginData
-  if (!user) {
-    message.value = 'No user found after login.'
-    return
-  }
-
-  const { data: existingUser, error: fetchError } = await supabase
-    .from('users')
-    .select('id, username')
-    .eq('id', user.id)
-    .single()
-
-  console.log(existingUser) // before inserting username (username still null)
-  if (fetchError) {
-    message.value = `Error checking user profile: ${fetchError.message}`
-    return
-  }
-
-  if (existingUser && !existingUser.username) {
-    const { error: updateError } = await supabase
-      .from('users')
-      .update({ username: form.username })
-      .eq('id', user.id)
-
-    if (updateError) {
-      message.value = `Error updating user profile: ${updateError.message}`
-      return
+    if (error.message.toLowerCase().includes('already registered')) {
+      errorMessage.value = 'Email is already in use.'
+    } else {
+      errorMessage.value = `Sign up error: ${error.message}`
     }
-    message.value = 'User logged in and profile updated!'
+
+    return
+  } else if (data?.user?.identities?.length === 0) {
+    errorMessage.value = 'Email is already registered. Try logging in or using another email.'
+    return //problem: email confirmed, but supabase still allows signup but w/o creating new user or sending confirmation email and doesn't give error (its supposed to) - solution: disable email confirmation or do this
   } else {
-    message.value = 'User already has a profile. Logged in!'
+    errorMessage.value = 'Sign up successful! Please check your email to confirm'
   }
-
-  store.$patch((state) => {
-    state.items.push({})
-  })
-}
-
-async function signOut() {
-  const { error } = await supabase.auth.signOut()
-  // reset user in store
-
-  store.$reset()
+  // problem: can't insert username bc user is not signed in yet (no session) & can't do anything after signup until user confirms email
+  // options:
+  // remove email confirmation in supabase
+  // save username locally somewhere and insert it in login
+  // use metadata and insert username with SQL *what I did
 }
 </script>

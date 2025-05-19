@@ -1,9 +1,10 @@
-<script setup>
-import SignUp from '../components/SignUp.vue'
+<script setup lang="ts">
+import SignoutButton from '../components/SignoutButton.vue'
 </script>
 
 <template>
   <main>
-    <SignUp />
+    <h1>hello this is the home page</h1>
+    <SignoutButton v-if="store.isSignedIn" />
   </main>
 </template>
