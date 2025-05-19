@@ -1,11 +1,12 @@
 <template>
   <div>
     <h2>Sign Up</h2>
-    <input v-model="signupForm.email" type="email" placeholder="Email" />
-    <input v-model="signupForm.password" type="password" placeholder="Password" />
-    <input v-model="signupForm.username" type="text" placeholder="Username" />
-    <button @click="signUp">Sign Up</button>
-
+    <form @submit.prevent="signUp">
+      <input v-model="signupForm.email" type="email" placeholder="Email" />
+      <input v-model="signupForm.password" type="password" placeholder="Password" />
+      <input v-model="signupForm.username" type="text" placeholder="Username" />
+      <button type="submit">Sign Up</button>
+    </form>
     <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
 </template>
@@ -43,10 +44,19 @@ async function signUp() {
       },
     },
   })
-
+  console.log('Supabase signup result:', { data, error })
   if (error) {
-    errorMessage.value = `Sign up error: ${error.message}`
+    if (error.message.toLowerCase().includes('already registered')) {
+      errorMessage.value = 'Email is already in use.'
+    } else {
+      errorMessage.value = `Sign up error: ${error.message}`
+    }
+
     return
+  } else if (data?.user?.identities?.length === 0) {
+    errorMessage.value =
+      'Email is already registered. Try logging in or checking your email to confirm.'
+    return //problem: email confirmed, but supabase still allows signup but w/o creating new user or sending confirmation email and doesn't give error (its supposed to) - solution: disable email confirmation or do this
   } else {
     errorMessage.value = 'Sign up successful! Please check your email to confirm'
   }
