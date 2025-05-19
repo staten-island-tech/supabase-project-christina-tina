@@ -11,17 +11,16 @@ import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
 const router = useRouter()
-const data = ref(null)
 
-//fetch data
-while(data === null){
-    //...
-}
+//get user data
+let { data: users, error } = await supabase
+  .from('users')
+  .select('*')
 
+//if data has been loaded, route to homepage
 if (data){
     router.push('/')
 }
-
 
 </script>
 
