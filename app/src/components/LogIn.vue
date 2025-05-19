@@ -1,9 +1,11 @@
 <template>
   <div>
     <h2>Log In</h2>
-    <input v-model="loginForm.email" type="email" placeholder="Email" />
-    <input v-model="loginForm.password" type="password" placeholder="Password" />
-    <button @click="logIn">Log In</button>
+    <form @submit.prevent="logIn">
+      <input v-model="loginForm.email" type="email" placeholder="Email" />
+      <input v-model="loginForm.password" type="password" placeholder="Password" />
+      <button type="submit">Log In</button>
+    </form>
 
     <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
@@ -42,7 +44,7 @@ const logIn = async () => {
     errorMessage.value = `Login error: ${error.message}`
     return
   } else {
-    store.signIn(loginData)
+    store.signIn(loginForm)
     console.log(store.user, store.isSignedIn)
     router.push('/')
   }
