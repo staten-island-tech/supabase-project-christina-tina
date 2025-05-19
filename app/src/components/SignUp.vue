@@ -33,10 +33,15 @@ const store = useStore()
 
 async function signUp() {
   errorMessage.value = ''
-
+  // check if username/email already exists; yes-direct to login or input smth diff, no-continue
   const { data, error } = await supabase.auth.signUp({
     email: signupForm.email,
     password: signupForm.password,
+    options: {
+      data: {
+        username: signupForm.username,
+      },
+    },
   })
 
   if (error) {
@@ -45,17 +50,10 @@ async function signUp() {
   } else {
     errorMessage.value = 'Sign up successful! Please check your email to confirm'
   }
-  // problem: can't insert username bc user is not signed in yet (no session) - either remove email confirmation in supabase OR save username locally somewhere and insert it in login OR use metadata and insert username with SQL
-  /* const user = data?.user
-  if (user) {
-    const { error: insertError } = await supabase.from('users').insert({
-      id: user.id,
-      username: signupForm.username,
-    })
-
-    if (insertError) {
-      errorMessage.value = `Username update error: ${insertError.message}`
-    }
-  } */
+  // problem: can't insert username bc user is not signed in yet (no session) & can't do anything after signup until user confirms email
+  // options:
+  // remove email confirmation in supabase
+  // save username locally somewhere and insert it in login
+  // use metadata and insert username with SQL *what I did
 }
 </script>
