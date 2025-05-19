@@ -1,11 +1,16 @@
 <template>
   <main>
-    <h1>hello this is the home page</h1>
+    <h1 class="text-center text-4xl font-bold mt-10">hello this is the home page</h1>
     <SignoutButton v-if="store.isSignedIn" />
+    <div class="routers"></div>
   </main>
 </template>
 
 <script setup>
 import SignoutButton from '../components/SignoutButton.vue'
-import { ref } from 'vue'
+import { useStore } from '../stores/userStore'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const store = useStore()
 </script>
