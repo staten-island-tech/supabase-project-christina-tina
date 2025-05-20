@@ -12,15 +12,10 @@ import { ref } from 'vue';
 
 const router = useRouter()
 
-//get user data
-let { data: users, error } = await supabase
-  .from('users')
-  .select('*')
+const { data, error } = await supabase.from('users').select()
 
+//get user data
 //if data has been loaded, route to homepage
-if (data){
-    router.push('/')
-}
 
 </script>
 
