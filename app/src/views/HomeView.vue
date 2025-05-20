@@ -6,7 +6,7 @@
   </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SignoutButton from '../components/SignoutButton.vue'
 import { useStore } from '../stores/userStore'
 import { useRouter } from 'vue-router'
