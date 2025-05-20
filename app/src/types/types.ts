@@ -1,10 +1,15 @@
 interface User {
     email: string
-    password: string
     username: string
     currency: number
     score: number
     items: object[]
 }
 
-export type {User}
+interface UserForm {
+    email: string
+    password: string
+    username: string
+}
+
+export type {User, UserForm}

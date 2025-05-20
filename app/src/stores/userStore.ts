@@ -1,6 +1,6 @@
 import { ref, reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { User } from '../types/types'
+import type { User, UserForm } from '../types/types'
 import { supabase } from '../lib/supabaseClient'
 
 export const useStore = defineStore('user', () => {
@@ -12,11 +12,6 @@ export const useStore = defineStore('user', () => {
   const errorMessage = ref<string>('')
 
   // actions
-  function signIn(userData: User) {
-    isSignedIn.value = true
-    user.value = userData
-  }
-
   function signOut() {
     isSignedIn.value = false
     user.value = null
@@ -59,21 +54,38 @@ export const useStore = defineStore('user', () => {
     email: email,
     password: password,
   })
-
+  console.log("first",loginData.user.id) //works
   if (error) {
     errorMessage.value = `Login error: ${error.message}`
     return errorMessage.value
   } else {
     isSignedIn.value = true
-    user.value = //get user from supabase
-  }
+    async function getUserData() {
+      const {data, error} = await supabase.from('users').select('*').eq('id',loginData.user.id)
+      if (error){
+        console.log("getUserData error",error)
+      } else {
+        return data
+      }
+    }
+    const temp = await getUserData() //temp is list of all users with that id
+    console.log("temp[0] is",temp[0])
+    user.value = reactive<User>({
+      email: email,
+      username: temp[0].username,
+      currency: temp[0].currency,
+      score: temp[0].score,
+      items: [],
+    })//get user from supabase
+    
+  }}
 
   return {
     user,
     isSignedIn,
     errorMessage,
-    signIn,
     signOut,
     signUp,
+    logIn
   }
-})
+  })

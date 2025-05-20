@@ -15,16 +15,13 @@
 import { ref, reactive } from 'vue'
 import { useStore } from '../stores/userStore'
 import { useRouter } from 'vue-router'
-import type { User } from '../types/types'
+import type { UserForm } from '../types/types'
 const store = useStore()
 const router = useRouter()
-const signupForm = reactive<User>({
+const signupForm = reactive<UserForm>({
   email: '',
   password: '',
   username: '',
-  currency: 0,
-  score: 0,
-  items: [],
 })
 async function signUp() {
   //check if exists

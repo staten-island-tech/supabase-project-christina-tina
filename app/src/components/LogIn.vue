@@ -15,19 +15,16 @@
 import { ref, reactive } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 import type { Ref } from 'vue'
-import type { User } from '../types/types'
+import type { UserForm } from '../types/types'
 import { useStore } from '../stores/userStore'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const loginForm = reactive<User>({
-  email: '',
-  password: '',
+const loginForm = reactive<UserForm>({
+  email: 'christinach709@gmail.com',
+  password: 'password',
   username: '',
-  currency: 0,
-  score: 0,
-  items: [],
 })
 const errorMessage = ref<string>('')
 const store = useStore()
@@ -35,13 +32,13 @@ const store = useStore()
 const logIn = async () => {
   errorMessage.value = ''
   // check: user doesn't exist, direct to signup/ make sure inputs are right
-
+  const error = store.logIn(loginForm.email, loginForm.password)
+  console.log('error', error)
   if (error) {
-    errorMessage.value = `Login error: ${error.message}`
+    errorMessage.value = await error
     return
   } else {
-    store.signIn(loginForm)
-    console.log(store.user, store.isSignedIn)
+    console.log('login successful', store.user, store.isSignedIn)
     router.push('/')
   }
 }
