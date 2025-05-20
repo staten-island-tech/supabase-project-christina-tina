@@ -17,7 +17,7 @@
       "allowJs": true,
       "strict": true,
       "baseUrl": ".",
-      "types": ["vite/client"]
+      "types": ["vite/client", "vue"]
     }
   
   

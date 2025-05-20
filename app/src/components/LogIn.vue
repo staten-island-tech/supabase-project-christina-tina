@@ -35,10 +35,6 @@ const store = useStore()
 const logIn = async () => {
   errorMessage.value = ''
   // check: user doesn't exist, direct to signup/ make sure inputs are right
-  const { data: loginData, error } = await supabase.auth.signInWithPassword({
-    email: loginForm.email,
-    password: loginForm.password,
-  })
 
   if (error) {
     errorMessage.value = `Login error: ${error.message}`

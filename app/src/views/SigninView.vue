@@ -11,9 +11,9 @@
   </div>
 </template>
 
-<script setup>
-import SignUp from '../components/SignUp.vue'
+<script setup lang="ts">
 import LogIn from '../components/LogIn.vue'
 import { ref } from 'vue'
+import SignUp from '../components/SignUp.vue'
 const mode = ref('login')
 </script>
