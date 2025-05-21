@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>Log In</h2>
-    <form @submit.prevent="logIn">
+    <form @submit.prevent="handleLogin()">
       <input v-model="loginForm.email" type="email" placeholder="Email" />
       <input v-model="loginForm.password" type="password" placeholder="Password" />
       <button type="submit">Log In</button>
@@ -29,13 +29,12 @@ const loginForm = reactive<UserForm>({
 const errorMessage = ref<string>('')
 const store = useStore()
 
-const logIn = async () => {
+async function handleLogin() {
   errorMessage.value = ''
   // check: user doesn't exist, direct to signup/ make sure inputs are right
-  const error = store.logIn(loginForm.email, loginForm.password)
-  console.log('error', error)
+  const error = await store.logIn(loginForm.email, loginForm.password)
   if (error) {
-    errorMessage.value = await error
+    errorMessage.value = error
     return
   } else {
     console.log('login successful', store.user, store.isSignedIn)

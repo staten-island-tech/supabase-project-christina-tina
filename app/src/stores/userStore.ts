@@ -4,7 +4,6 @@ import type { User, UserForm } from '../types/types'
 import { supabase } from '../lib/supabaseClient'
 
 export const useStore = defineStore('user', () => {
-
   // state
   const user = ref<User | null>(null)
   const isSignedIn = ref(false)
@@ -54,31 +53,44 @@ export const useStore = defineStore('user', () => {
     email: email,
     password: password,
   })
-  console.log("first",loginData.user.id) //works
+  console.log("loginData",loginData)
   if (error) {
     errorMessage.value = `Login error: ${error.message}`
     return errorMessage.value
-  } else {
+  } 
+  if (!loginData?.user) {
+    errorMessage.value="Login failed: No user data returned"
+    return errorMessage.value
+  }
+  /* const { data: temp, error: userFetchError } = await supabase 
+    .from('users')
+    .select('*')
+    .eq('id', loginData.user.id) */
+
+    const {data: temp, error: userFetchError} = await getUserByID(loginData.user.id) //temp is a list of all users with this id, should be array w one element - change var name later
+
+  if (userFetchError||!temp|| temp.length === 0 || !temp[0]){
+    errorMessage.value='Login error: Could not retrieve user data.'
+    return errorMessage.value
+  }
     isSignedIn.value = true
-    async function getUserData() {
-      const {data, error} = await supabase.from('users').select('*').eq('id',loginData.user.id)
-      if (error){
-        console.log("getUserData error",error)
-      } else {
-        return data
-      }
-    }
-    const temp = await getUserData() //temp is list of all users with that id
-    console.log("temp[0] is",temp[0])
+    
     user.value = reactive<User>({
       email: email,
       username: temp[0].username,
       currency: temp[0].currency,
       score: temp[0].score,
       items: [],
-    })//get user from supabase
+    })
     
-  }}
+  }
+async function getUserByID(id:string) { //fetch user data from public users table, supabase.auth.getUser() fetches from auth users table
+      const {data, error} = await supabase
+      .from('users')
+      .select('*')
+      .eq('id',id)
+        return {data, error}
+    }
 
   return {
     user,

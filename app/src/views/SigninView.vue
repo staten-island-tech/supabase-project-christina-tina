@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import LogIn from '../components/LogIn.vue'
 import { ref } from 'vue'
 import SignUp from '../components/SignUp.vue'

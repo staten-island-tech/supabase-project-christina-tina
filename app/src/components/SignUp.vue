@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>Sign Up</h2>
-    <form @submit.prevent="signUp">
+    <form @submit.prevent="handleSignup()">
       <input v-model="signupForm.email" type="email" placeholder="Email" />
       <input v-model="signupForm.password" type="password" placeholder="Password" />
       <input v-model="signupForm.username" type="text" placeholder="Username" />
@@ -23,9 +23,9 @@ const signupForm = reactive<UserForm>({
   password: '',
   username: '',
 })
-async function signUp() {
+async function handleSignup() {
   //check if exists
   store.signUp(signupForm.email, signupForm.password, signupForm.username)
-  //reset
+  //reset form
 }
 </script>
