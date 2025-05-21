@@ -8,10 +8,13 @@
 import { ref } from 'vue';
 import { supabase } from '@/lib/supabaseClient';
 
-const {question, error} = await supabase
+let { data: questions, error } = await supabase
   .from('questions')
-  .select("*")
-  .eq('category', 'quote')
+  .select('*')
+  .eq('column', 'quote')
+          
+function getQuestion(){
+}
 
 </script>
 
