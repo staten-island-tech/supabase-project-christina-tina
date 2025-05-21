@@ -13,9 +13,9 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { supabase } from '../lib/supabaseClient'
+import { supabase } from '../supabaseClient'
 import type { Ref } from 'vue'
-import type { UserForm } from '../types/types'
+import type { UserForm } from '../types'
 import { useStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 
