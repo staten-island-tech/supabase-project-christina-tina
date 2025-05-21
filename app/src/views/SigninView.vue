@@ -2,8 +2,8 @@
   <div>
     <h2>heading/description</h2>
     <div>
-      <button @click="mode = 'signup'">Sign Up</button>
-      <button @click="mode = 'login'">Login</button>
+      <button class="btn" @click="mode = 'signup'">Sign Up</button>
+      <button class="btn" @click="mode = 'login'">Login</button>
     </div>
     <SignUp v-if="mode === 'signup'" />
     <LogIn v-else />
@@ -11,9 +11,9 @@
   </div>
 </template>
 
-<script setup>
-import SignUp from '../components/SignUp.vue'
+<script setup lang="ts">
 import LogIn from '../components/LogIn.vue'
 import { ref } from 'vue'
+import SignUp from '../components/SignUp.vue'
 const mode = ref('login')
 </script>

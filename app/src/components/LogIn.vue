@@ -1,10 +1,10 @@
 <template>
   <div>
     <h2>Log In</h2>
-    <form @submit.prevent="logIn">
+    <form @submit.prevent="handleLogin()">
       <input v-model="loginForm.email" type="email" placeholder="Email" />
       <input v-model="loginForm.password" type="password" placeholder="Password" />
-      <button type="submit">Log In</button>
+      <button class="btn" type="submit">Log In</button>
     </form>
 
     <p v-if="errorMessage">{{ errorMessage }}</p>
@@ -15,37 +15,29 @@
 import { ref, reactive } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 import type { Ref } from 'vue'
-import type { User } from '../types/types'
-import { useStore } from '../stores/userStore'
+import type { UserForm } from '../types/types'
+import { useStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const loginForm = reactive<User>({
-  email: '',
-  password: '',
+const loginForm = reactive<UserForm>({
+  email: 'christinach709@gmail.com',
+  password: 'password',
   username: '',
-  currency: 0,
-  score: 0,
-  items: [],
 })
 const errorMessage = ref<string>('')
 const store = useStore()
 
-const logIn = async () => {
+async function handleLogin() {
   errorMessage.value = ''
   // check: user doesn't exist, direct to signup/ make sure inputs are right
-  const { data: loginData, error } = await supabase.auth.signInWithPassword({
-    email: loginForm.email,
-    password: loginForm.password,
-  })
-
+  const error = await store.logIn(loginForm.email, loginForm.password)
   if (error) {
-    errorMessage.value = `Login error: ${error.message}`
+    errorMessage.value = error
     return
   } else {
-    store.signIn(loginForm)
-    console.log(store.user, store.isSignedIn)
+    console.log('login successful', store.user, store.isSignedIn)
     router.push('/')
   }
 }

@@ -7,18 +7,5 @@
     {
       "path": "./tsconfig.app.json"
     }
-  ],
-  
-    "compilerOptions": {
-      "module": "ESNext",
-      "target": "ESNext",
-      "moduleResolution": "Node",
-      "jsx": "preserve",
-      "allowJs": true,
-      "strict": true,
-      "baseUrl": ".",
-      "types": ["vite/client"]
-    }
-  
-  
+  ]
 }
