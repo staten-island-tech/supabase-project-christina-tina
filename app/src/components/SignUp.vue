@@ -23,9 +23,15 @@ const signupForm = reactive<UserForm>({
   password: '',
   username: '',
 })
+const errorMessage = ref<string>('')
 async function handleSignup() {
+  errorMessage.value = ''
   //check if exists
-  store.signUp(signupForm.email, signupForm.password, signupForm.username)
+  const error = await store.signUp(signupForm.email, signupForm.password, signupForm.username)
+  if (error) {
+    errorMessage.value = error
+    return
+  }
   //reset form
 }
 </script>
