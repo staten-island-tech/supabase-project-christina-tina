@@ -2,8 +2,8 @@
   <div>
     <h2>Log In</h2>
     <form @submit.prevent="handleLogin()">
-      <input v-model="loginForm.email" type="email" placeholder="Email" />
-      <input v-model="loginForm.password" type="password" placeholder="Password" />
+      <input class="input" v-model="loginForm.email" type="email" placeholder="Email" />
+      <input class="input" v-model="loginForm.password" type="password" placeholder="Password" />
       <button class="btn" type="submit">Log In</button>
     </form>
 
