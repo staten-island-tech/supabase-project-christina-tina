@@ -6,7 +6,7 @@
       <input class="input" v-model="loginForm.password" type="password" placeholder="Password" />
       <button class="btn" type="submit">Log In</button>
     </form>
-
+    <p>Don't have an account? Try signing up</p>
     <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
 </template>
