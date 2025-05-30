@@ -16,6 +16,7 @@ const store = useStore()
 
 if (store.isSignedIn){
     const userData = store.user
+    const questionsData = 
     router.push('/')
 }
 
