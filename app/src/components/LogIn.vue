@@ -38,7 +38,6 @@ async function handleLogin() {
     return
   } else {
     console.log('login successful', store.user, store.isSignedIn)
-    router.push('/')
   }
 }
 </script>

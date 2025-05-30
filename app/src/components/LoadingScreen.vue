@@ -7,15 +7,17 @@
 <script setup>
 import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/composables/useAuth'; 
+import { useStore } from '../stores/user'
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
 const router = useRouter()
+const store = useStore()
 
-const { data, error } = await supabase.from('users').select()
-
-//get user data
-//if data has been loaded, route to homepage
+if (store.isSignedIn){
+    const userData = store.user
+    router.push('/')
+}
 
 </script>
 
