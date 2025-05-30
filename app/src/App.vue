@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <!-- put navbar here -->
-  <header class="">
+  <header class="absolute top-0">
     <div class="drawer">
       <input id="my-drawer" type="checkbox" class="drawer-toggle" />
       <div class="drawer-content">
