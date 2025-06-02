@@ -56,7 +56,7 @@ const store = useStore()
       <div class="drawer-side absolute">
         <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay drawer-"></label>
         <ul class="menu bg-base-200 min-h-full w-80 p-4 text-xl">
-          <li><a>Signin</a></li>
+          <li><RouterLink to="/signin">Signin</RouterLink></li>
           <li><a>View Stats</a></li>
           <li><a>something</a></li>
           <li><a>Log Out</a></li>
