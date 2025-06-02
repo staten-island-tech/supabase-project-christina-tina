@@ -1,41 +1,71 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import LogoutBtn from './components/LogoutBtn.vue'
+import { useStore } from './stores/user'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const store = useStore()
 </script>
 
 <template>
-  <!-- put navbar here -->
-  <header class="absolute top-0">
+  <header class="absolute top-0 left-0 w-full">
     <div class="drawer">
-      <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-content">
-        <RouterView />
-        <label for="my-drawer" class="btn btn-ghost btn-square drawer-button absolute top-0 left-0">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            class="inline-block h-6 w-6 stroke-current"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            ></path>
-          </svg>
-          <h1 class="">heading</h1>
-        </label>
+      <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
+      <div class="drawer-content flex flex-col">
+        <div class="navbar bg-base-300 w-full">
+          <div class="flex-none">
+            <label for="my-drawer-3" aria-label="open sidebar" class="btn btn-square btn-ghost">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                class="inline-block h-6 w-6 stroke-current"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </label>
+          </div>
+          <div class="mx-2 flex-1 px-2 text-center">
+            <a class="btn btn-ghost text-3xl">Title</a>
+          </div>
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+              <div class="w-10 rounded-full">
+                <img alt="user profile picture" src="" />
+              </div>
+            </div>
+            <ul
+              tabindex="0"
+              class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+            >
+              <li>
+                <a>Profile</a>
+              </li>
+              <li><a>Settings</a></li>
+              <li><LogoutBtn v-if="store.isSignedIn" /></li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div class="drawer-side">
-        <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-        <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-          <!-- Sidebar content here -->
-          <li><a>Sidebar Item 1</a></li>
-          <li><a>Sidebar Item 2</a></li>
+      <div class="drawer-side absolute">
+        <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay drawer-"></label>
+        <ul class="menu bg-base-200 min-h-full w-80 p-4 text-xl">
+          <li><a>Signin</a></li>
+          <li><a>View Stats</a></li>
+          <li><a>something</a></li>
+          <li><a>Log Out</a></li>
         </ul>
       </div>
     </div>
   </header>
+
+  <RouterView />
 </template>
 
 <style scoped></style>

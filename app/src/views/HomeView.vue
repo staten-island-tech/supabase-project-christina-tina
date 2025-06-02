@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="navbar bg-base-100 shadow-sm absolute top-0 left-0 w-full">
+    <!-- <div class="navbar bg-base-100 shadow-sm absolute top-0 left-0 w-full">
       <div class="navbar-start">
         <div class="dropdown">
           <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
@@ -51,7 +51,7 @@
           </ul>
         </div>
       </div>
-    </div>
+    </div> -->
     <h1 class="text-center text-4xl font-bold mt-10">hello this is the home page</h1>
     <div class="routers absolute right-4 bottom-4">
       <button class="btn btn-xl">Start Game</button>
