@@ -1,6 +1,5 @@
 <template>
     <div>   
-        <div class="loader" v-if="!data"></div>
     </div>
 </template>
 
@@ -15,8 +14,7 @@ const router = useRouter()
 const store = useStore()
 
 if (store.isSignedIn){
-    const userData = store.user
-    const questionsData = 
+     
     router.push('/')
 }
 
