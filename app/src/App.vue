@@ -13,7 +13,7 @@ const store = useStore()
     <div class="drawer">
       <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
       <div class="drawer-content flex flex-col">
-        <div class="navbar bg-base-300 w-full">
+        <div class="navbar bg-base-300">
           <div class="flex-none">
             <label for="my-drawer-3" aria-label="open sidebar" class="btn btn-square btn-ghost">
               <svg
@@ -53,10 +53,12 @@ const store = useStore()
           </div>
         </div>
       </div>
-      <div class="drawer-side absolute">
-        <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay drawer-"></label>
+      <div class="drawer-side">
+        <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul class="menu bg-base-200 min-h-full w-80 p-4 text-xl">
+          <li><RouterLink to="/">Home</RouterLink></li>
           <li><RouterLink to="/signin">Signin</RouterLink></li>
+          <li><RouterLink to="/profile">Profile</RouterLink></li>
           <li><a>View Stats</a></li>
           <li><a>something</a></li>
           <li><a>Log Out</a></li>

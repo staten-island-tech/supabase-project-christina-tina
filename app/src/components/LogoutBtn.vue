@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="btn" @click="signOut()">log out</button>
+    <button class="" @click="signOut()">Log Out</button>
     <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
 </template>
