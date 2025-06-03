@@ -1,52 +1,75 @@
 <template>
   <div>
-    <div v-if="error">Error: {{ error.message }}</div>
+    <div v-if="questionError">Error: {{ error.message }}</div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { supabase } from '@/lib/supabaseClient';
+import { ref, onMounted } from 'vue'
+import { supabase } from '@/lib/supabaseClient'
 
-function shuffle(array) { 
+function shuffle(array) {
   for (let i = array.length - 1; i >= 1; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[j]] = [array[j], array[i]]
   }
-  return array;
+  return array
 }
 
-const questionsData = ref([]);
-const error = ref(null);
+const questionsData = ref([])
+const questionError = ref(null)
+const answersData = ref([])
+const answerError = ref(null)
 
 async function getQuestions() {
-  const { data, error: fetchError } = await supabase
+  const { data, error: fetchQuestionsError } = await supabase
     .from('questions')
     .select('*')
-    .eq('column', 'quote');
+    .eq('column', 'quote')
 
   if (fetchError) {
-    error.value = fetchError;
+    questionError.value = fetchQuestionsError
   } else {
-    questionsData.value = data;
+    questionsData.value = data
   }
 }
 
-function showQuestion() {
-  if (questionsData){
-    const question = questionsData.question
-    const correctAnswer = questionsData.correct_ans
-    const incorrectAnswers = 
-    const allAnswers = shuffle()
+async function getAllAnswers() {
+  const { data, error: fetchAnswersError } = await supabase
+    .from('question')
+    .select('correct_ans')
+
+  if (fetchError){
+    answerError.value = fetchAnswersError
+  } else {
+    answersData.value = data
+  }
+}
+
+function question() {
+  getQuestions()
+  getAllAnswers()
+  if (questionsData && answersData) {
+    for (let i = 0; i < questionsData.length; i++) {
+      const questionid = questionsData[i].id
+      const question = questionsData[i].question
+      const correctAnswer = questionsData[i].correct_ans
+      const incorrectAnswers = []
+      while (incorrectAnswers.length < 3){
+        const randomAnswer = answersData[Math.floor(Math.random() * answersData.length)]
+        if (randomAnswer !== correctAnswer){
+          incorrectAnswers.push(randomAnswer)
+        }
+      }
+      const allAnswers = shuffle([correctAnswer, ...incorrectAnswers])
+    }
   }
 }
 
 onMounted(() => {
-  getQuestions();
-});
+  
+})
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
