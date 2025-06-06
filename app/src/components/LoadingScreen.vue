@@ -1,5 +1,6 @@
 <template>
-    <div>   
+    <div>  
+        <span class="loading loading-spinner loading-lg"></span> 
     </div>
 </template>
 
@@ -14,7 +15,6 @@ const router = useRouter()
 const store = useStore()
 
 if (store.isSignedIn){
-     
     router.push('/')
 }
 

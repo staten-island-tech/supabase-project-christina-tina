@@ -27,7 +27,7 @@ async function getQuestions() {
     .select('*')
     .eq('column', 'quote')
 
-  if (fetchError) {
+  if (fetchQuestionsError) {
     questionError.value = fetchQuestionsError
   } else {
     questionsData.value = data
@@ -39,7 +39,7 @@ async function getAllAnswers() {
     .from('question')
     .select('correct_ans')
 
-  if (fetchError){
+  if (fetchAnswersError){
     answerError.value = fetchAnswersError
   } else {
     answersData.value = data
@@ -47,8 +47,6 @@ async function getAllAnswers() {
 }
 
 function question() {
-  getQuestions()
-  getAllAnswers()
   if (questionsData && answersData) {
     for (let i = 0; i < questionsData.length; i++) {
       const questionid = questionsData[i].id
@@ -62,12 +60,18 @@ function question() {
         }
       }
       const allAnswers = shuffle([correctAnswer, ...incorrectAnswers])
+      return { questionid, question, correctAnswer, allAnswers }
     }
   }
 }
 
+function displayQuestion(id, question, correct_ans, answers){
+  const game = question()
+}
+
 onMounted(() => {
-  
+  getQuestions()
+  getAllAnswers()
 })
 
 </script>
