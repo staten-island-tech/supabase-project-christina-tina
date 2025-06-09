@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import LogoutBtn from '../components/LogoutBtn.vue'
+import SignoutButton from '../components/SignoutButton.vue'
 import { useStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 

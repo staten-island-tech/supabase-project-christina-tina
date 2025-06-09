@@ -1,12 +1,16 @@
 <template>
   <div>
-    <div v-if="questionError">Error: {{ error.message }}</div>
+    <div v-if="!questionError">
+      <QuestionCard/>
+    </div>
+    <div v-else>Error: {{ error.message }}</div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { supabase } from '@/lib/supabaseClient'
+import QuestionCard from './QuestionCard.vue';
 
 function shuffle(array) {
   for (let i = array.length - 1; i >= 1; i--) {
@@ -63,10 +67,6 @@ function question() {
       return { questionid, question, correctAnswer, allAnswers }
     }
   }
-}
-
-function displayQuestion(id, question, correct_ans, answers){
-  const game = question()
 }
 
 onMounted(() => {

@@ -9,14 +9,11 @@ import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/composables/useAuth'; 
 import { useStore } from '../stores/user'
 import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
 import { ref } from 'vue';
 
 const router = useRouter()
 const store = useStore()
-
-if (store.isSignedIn){
-    router.push('/')
-}
 
 </script>
 
