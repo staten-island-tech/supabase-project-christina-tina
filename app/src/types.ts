@@ -1,6 +1,7 @@
 interface User {
     email: string
     username: string
+    profile_pic: string
     currency: number
     score: number
     items: object[]
