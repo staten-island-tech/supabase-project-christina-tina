@@ -1,18 +1,35 @@
 <template>
   <div>
-    <div v-if="!questionError">
-      <QuestionCard/>
+    <div v-if="!questionError && currentQuestion">
+      <QuestionCard :question="currentQuestion" />
     </div>
-    <div v-else>Error: {{ error.message }}</div>
+    <div v-else-if="questionError" class="text-red-600 font-semibold p-4">
+      Error: {{ questionError.message }}
+    </div>
+    <div v-else class="text-gray-500 p-4">Loading...</div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { supabase } from '@/lib/supabaseClient'
-import QuestionCard from './QuestionCard.vue';
+import QuestionCard from './QuestionCard.vue'
 
-function shuffle(array) {
+interface Question {
+  id: number
+  category: string
+  question: string
+  correct_ans: string
+}
+
+interface DisplayQuestion {
+  id: number
+  text: string
+  correct: string
+  choices: string[]
+}
+
+function shuffle<T>(array: T[]): T[] {
   for (let i = array.length - 1; i >= 1; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[array[i], array[j]] = [array[j], array[i]]
@@ -20,60 +37,64 @@ function shuffle(array) {
   return array
 }
 
-const questionsData = ref([])
-const questionError = ref(null)
-const answersData = ref([])
-const answerError = ref(null)
+const questionsData = ref<Question[]>([])
+const answersData = ref<string[]>([])
+const questionError = ref<Error | null>(null)
+const currentQuestion = ref<DisplayQuestion | null>(null)
 
 async function getQuestions() {
-  const { data, error: fetchQuestionsError } = await supabase
+  const { data, error } = await supabase
     .from('questions')
     .select('*')
-    .eq('column', 'quote')
+    .eq('category', 'quote')
 
-  if (fetchQuestionsError) {
-    questionError.value = fetchQuestionsError
+  if (error) {
+    questionError.value = error
   } else {
-    questionsData.value = data
+    questionsData.value = data as Question[]
   }
 }
 
 async function getAllAnswers() {
-  const { data, error: fetchAnswersError } = await supabase
-    .from('question')
+  const { data, error } = await supabase
+    .from('questions')
     .select('correct_ans')
 
-  if (fetchAnswersError){
-    answerError.value = fetchAnswersError
+  if (error) {
+    questionError.value = error
   } else {
-    answersData.value = data
+    answersData.value = (data as { correct_ans: string }[]).map(a => a.correct_ans)
   }
 }
 
-function question() {
-  if (questionsData && answersData) {
-    for (let i = 0; i < questionsData.length; i++) {
-      const questionid = questionsData[i].id
-      const question = questionsData[i].question
-      const correctAnswer = questionsData[i].correct_ans
-      const incorrectAnswers = []
-      while (incorrectAnswers.length < 3){
-        const randomAnswer = answersData[Math.floor(Math.random() * answersData.length)]
-        if (randomAnswer !== correctAnswer){
-          incorrectAnswers.push(randomAnswer)
-        }
-      }
-      const allAnswers = shuffle([correctAnswer, ...incorrectAnswers])
-      return { questionid, question, correctAnswer, allAnswers }
+function generateQuestion(): void {
+  if (!questionsData.value.length || !answersData.value.length) return
+
+  const randomIndex = Math.floor(Math.random() * questionsData.value.length)
+  const selected = questionsData.value[randomIndex]
+  const correctAnswer = selected.correct_ans
+
+  const incorrectAnswers = new Set<string>()
+  while (incorrectAnswers.size < 3) {
+    const rand = answersData.value[Math.floor(Math.random() * answersData.value.length)]
+    if (rand !== correctAnswer) {
+      incorrectAnswers.add(rand)
     }
   }
+
+  const allAnswers = shuffle([correctAnswer, ...Array.from(incorrectAnswers)])
+
+  currentQuestion.value = {
+    id: selected.id,
+    text: selected.question,
+    correct: correctAnswer,
+    choices: allAnswers,
+  }
 }
 
-onMounted(() => {
-  getQuestions()
-  getAllAnswers()
+onMounted(async () => {
+  await getQuestions()
+  await getAllAnswers()
+  generateQuestion()
 })
-
 </script>
-
-<style scoped></style>
