@@ -1,18 +1,56 @@
 <template>
   <div>
-    <div v-if="!questionError && currentQuestion">
-      <QuestionCard :question="currentQuestion" />
+    <div v-if="!gameStarted">
+      <button
+        @click="startGame"
+        class="px-4 py-2 bg-blue-600 text-white rounded"
+      >
+        Start Game
+      </button>
     </div>
-    <div v-else-if="questionError" class="text-red-600 font-semibold p-4">
-      Error: {{ questionError.message }}
+
+    <div v-else>
+      <div v-if="!questionError && currentQuestion">
+        <div class="text-center mb-4 text-gray-700 font-medium">
+          Question {{ currentIndex }} of {{ questionsData.length }}
+        </div>
+        <QuestionCard :question="currentQuestion" @answerSelected="handleAnswer" />
+      </div>
+
+      <div v-else-if="questionError" class="text-red-600 font-semibold p-4">
+        Error: {{ questionError.message }}
+      </div>
+
+      <div v-else-if="!questionError && questionsData.length === 0" class="text-gray-500 p-4">
+        No questions available.
+      </div>
+
+      <div v-else-if="!currentQuestion" class="text-center p-6">
+        <h2 class="text-xl font-semibold mb-4">Game Over!</h2>
+        <p class="mb-4">
+          You got {{ correctAnswersCount }} out of {{ questionsData.length }} questions right.
+        </p>
+        <button
+          @click="startGame"
+          class="mr-4 px-4 py-2 bg-green-600 text-white rounded"
+        >
+          Play Again
+        </button>
+        <button
+          @click="goHome"
+          class="px-4 py-2 bg-gray-600 text-white rounded"
+        >
+          Go Home
+        </button>
+      </div>
     </div>
-    <div v-else class="text-gray-500 p-4">Loading...</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { supabase } from '@/lib/supabaseClient'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { supabase } from '../supabaseClient'
 import QuestionCard from './QuestionCard.vue'
 
 interface Question {
@@ -37,45 +75,57 @@ function shuffle<T>(array: T[]): T[] {
   return array
 }
 
+const router = useRouter()
+
 const questionsData = ref<Question[]>([])
 const answersData = ref<string[]>([])
 const questionError = ref<Error | null>(null)
 const currentQuestion = ref<DisplayQuestion | null>(null)
 
-async function getQuestions() {
+const usedQuestionIds = ref<Set<number>>(new Set())
+const gameStarted = ref(false)
+const correctAnswersCount = ref(0)
+const currentIndex = ref(0)
+
+async function getQuestionsAndAnswers() {
   const { data, error } = await supabase
     .from('questions')
     .select('*')
-    .eq('category', 'quote')
+    .ilike('category', '%quote%')
 
   if (error) {
     questionError.value = error
-  } else {
-    questionsData.value = data as Question[]
+    return
   }
-}
 
-async function getAllAnswers() {
-  const { data, error } = await supabase
-    .from('questions')
-    .select('correct_ans')
-
-  if (error) {
-    questionError.value = error
-  } else {
-    answersData.value = (data as { correct_ans: string }[]).map(a => a.correct_ans)
-  }
+  const quoteQuestions = data as Question[]
+  questionsData.value = quoteQuestions
+  answersData.value = quoteQuestions.map(q => q.correct_ans)
 }
 
 function generateQuestion(): void {
-  if (!questionsData.value.length || !answersData.value.length) return
+  if (!questionsData.value.length || answersData.value.length < 2) {
+    currentQuestion.value = null
+    return
+  }
 
-  const randomIndex = Math.floor(Math.random() * questionsData.value.length)
-  const selected = questionsData.value[randomIndex]
+  const unusedQuestions = questionsData.value.filter(
+    (q) => !usedQuestionIds.value.has(q.id)
+  )
+
+  if (!unusedQuestions.length) {
+    currentQuestion.value = null
+    return
+  }
+
+  const randomIndex = Math.floor(Math.random() * unusedQuestions.length)
+  const selected = unusedQuestions[randomIndex]
   const correctAnswer = selected.correct_ans
 
   const incorrectAnswers = new Set<string>()
-  while (incorrectAnswers.size < 3) {
+  while (
+    incorrectAnswers.size < Math.min(3, answersData.value.length - 1)
+  ) {
     const rand = answersData.value[Math.floor(Math.random() * answersData.value.length)]
     if (rand !== correctAnswer) {
       incorrectAnswers.add(rand)
@@ -90,11 +140,36 @@ function generateQuestion(): void {
     correct: correctAnswer,
     choices: allAnswers,
   }
+
+  usedQuestionIds.value.add(selected.id)
+  currentIndex.value++
 }
 
-onMounted(async () => {
-  await getQuestions()
-  await getAllAnswers()
+async function startGame() {
+  questionError.value = null
+  currentQuestion.value = null
+  usedQuestionIds.value = new Set()
+  correctAnswersCount.value = 0
+  currentIndex.value = 0
+  await getQuestionsAndAnswers()
   generateQuestion()
-})
+  gameStarted.value = true
+}
+
+function handleAnswer(selectedAnswer: string) {
+  if (!currentQuestion.value) return
+
+  if (selectedAnswer === currentQuestion.value.correct) {
+    alert('Correct!')
+    correctAnswersCount.value++
+  } else {
+    alert('Wrong!')
+  }
+
+  generateQuestion()
+}
+
+function goHome() {
+  router.push({ path: '/' })
+}
 </script>

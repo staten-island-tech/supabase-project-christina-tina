@@ -46,7 +46,7 @@
       <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay"></label>
       <ul class="menu bg-base-200 min-h-full w-80 p-4 text-xl">
         <li><RouterLink to="/">Home</RouterLink></li>
-        <li><RouterLink to="/signin">Signin</RouterLink></li>
+        <li><RouterLink to="/signin">Signin/Login</RouterLink></li>
         <li><RouterLink to="/profile">Profile</RouterLink></li>
         <li><a>View Stats</a></li>
         <li><a>something</a></li>
