@@ -1,7 +1,6 @@
 interface User {
     email: string
     username: string
-    profile_pic: string
     currency: number
     score: number
     items: object[]
@@ -13,4 +12,11 @@ interface UserForm {
     username: string
 }
 
-export type {User, UserForm}
+interface Powerup {
+    id: number
+    name: string
+    description: string
+    price: number
+}
+
+export type {User, UserForm, Powerup}

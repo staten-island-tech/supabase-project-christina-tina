@@ -6,8 +6,8 @@
 </template>
 
 <script setup lang="ts">
-import { supabase } from '../lib/supabaseClient'
-import { useStore } from '../stores/userStore'
+import { supabase } from '../supabaseClient'
+import { useStore } from '../stores/user'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -27,4 +27,4 @@ async function signOut() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>

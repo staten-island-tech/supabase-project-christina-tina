@@ -1,8 +1,5 @@
 <template>
   <div class="card bg-base-100 w-96 shadow-sm">
-    <figure>
-      <img src="" alt="Shoes" />
-    </figure>
     <div class="card-body">
       <h2 class="card-title">{{ item?.name }}</h2>
       <p>

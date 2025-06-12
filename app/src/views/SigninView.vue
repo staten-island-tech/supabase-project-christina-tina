@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>heading/description</h2>
     <div role="tablist" class="tabs tabs-border">
       <button
         role="tab"

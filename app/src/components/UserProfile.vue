@@ -3,7 +3,7 @@
     <h2 class="text-2xl">User Profile</h2>
     <div class="avatar">
       <div class="w-24 rounded-full">
-        <img :src="user?.profile_pic" alt="user profile picture" />
+        <img src="/profile_icon.png" alt="user profile picture" />
       </div>
     </div>
     <div>

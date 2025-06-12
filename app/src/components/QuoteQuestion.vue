@@ -10,10 +10,7 @@
 
     <div v-else>
       <div v-if="!gameStarted">
-        <button
-          @click="startGame"
-          class="px-4 py-2 bg-blue-600 text-white rounded"
-        >
+        <button @click="startGame" class="px-4 py-2 bg-blue-600 text-white rounded">
           Start Game
         </button>
       </div>
@@ -39,15 +36,11 @@
           <p class="mb-4">
             You got {{ correctAnswersCount }} out of {{ questionsData.length }} questions right.
           </p>
-          <button
-            @click="startGame"
-            class="mr-4 px-4 py-2 bg-green-600 text-white rounded"
-          >
+          <button @click="startGame" class="mr-4 px-4 py-2 bg-green-600 text-white rounded">
             Play Again
           </button>
-          <button
-            class="px-4 py-2 bg-gray-600 text-white rounded"
-          ><RouterLink to="/">Go Home</RouterLink>
+          <button class="px-4 py-2 bg-gray-600 text-white rounded">
+            <RouterLink to="/">Go Home</RouterLink>
           </button>
         </div>
       </div>
@@ -95,10 +88,7 @@ const currentIndex = ref(0)
 const loading = ref(false)
 
 async function getQuestionsAndAnswers() {
-  const { data, error } = await supabase
-    .from('questions')
-    .select('*')
-    .ilike('category', '%quote%')
+  const { data, error } = await supabase.from('questions').select('*').ilike('category', '%quote%')
 
   if (error) {
     questionError.value = error
@@ -107,7 +97,7 @@ async function getQuestionsAndAnswers() {
 
   const quoteQuestions = data as Question[]
   questionsData.value = quoteQuestions
-  answersData.value = quoteQuestions.map(q => q.correct_ans)
+  answersData.value = quoteQuestions.map((q) => q.correct_ans)
 }
 
 function generateQuestion(): void {
@@ -116,9 +106,7 @@ function generateQuestion(): void {
     return
   }
 
-  const unusedQuestions = questionsData.value.filter(
-    (q) => !usedQuestionIds.value.has(q.id)
-  )
+  const unusedQuestions = questionsData.value.filter((q) => !usedQuestionIds.value.has(q.id))
 
   if (!unusedQuestions.length) {
     currentQuestion.value = null
@@ -130,9 +118,7 @@ function generateQuestion(): void {
   const correctAnswer = selected.correct_ans
 
   const incorrectAnswers = new Set<string>()
-  while (
-    incorrectAnswers.size < Math.min(3, answersData.value.length - 1)
-  ) {
+  while (incorrectAnswers.size < Math.min(3, answersData.value.length - 1)) {
     const rand = answersData.value[Math.floor(Math.random() * answersData.value.length)]
     if (rand !== correctAnswer) {
       incorrectAnswers.add(rand)
@@ -172,6 +158,7 @@ function handleAnswer(selectedAnswer: string) {
 
   if (selectedAnswer === currentQuestion.value.correct) {
     alert('Correct!')
+    //add to currency+score
     correctAnswersCount.value++
   } else {
     alert('Wrong!')
