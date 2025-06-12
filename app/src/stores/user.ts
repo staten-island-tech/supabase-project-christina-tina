@@ -78,6 +78,7 @@ export const useStore = defineStore('user', () => {
     user.value = reactive<User>({
       email: email,
       username: temp[0].username,
+      profile_pic: temp[0].profile_pic,
       currency: temp[0].currency,
       score: temp[0].score,
       items: [],
