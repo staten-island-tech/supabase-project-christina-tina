@@ -1,47 +1,55 @@
 <template>
   <div>
-    <div v-if="!gameStarted">
-      <button
-        @click="startGame"
-        class="px-4 py-2 bg-blue-600 text-white rounded"
-      >
-        Start Game
-      </button>
-    </div>
+    <LoadingSpinner
+      v-if="loading"
+      message="Loading questions..."
+      sizeClass="w-16 h-16"
+      colorClass="text-blue-600"
+      backgroundClass="bg-white/70"
+    />
 
     <div v-else>
-      <div v-if="!questionError && currentQuestion">
-        <div class="text-center mb-4 text-gray-700 font-medium">
-          Question {{ currentIndex }} of {{ questionsData.length }}
-        </div>
-        <QuestionCard :question="currentQuestion" @answerSelected="handleAnswer" />
-      </div>
-
-      <div v-else-if="questionError" class="text-red-600 font-semibold p-4">
-        Error: {{ questionError.message }}
-      </div>
-
-      <div v-else-if="!questionError && questionsData.length === 0" class="text-gray-500 p-4">
-        No questions available.
-      </div>
-
-      <div v-else-if="!currentQuestion" class="text-center p-6">
-        <h2 class="text-xl font-semibold mb-4">Game Over!</h2>
-        <p class="mb-4">
-          You got {{ correctAnswersCount }} out of {{ questionsData.length }} questions right.
-        </p>
+      <div v-if="!gameStarted">
         <button
           @click="startGame"
-          class="mr-4 px-4 py-2 bg-green-600 text-white rounded"
+          class="px-4 py-2 bg-blue-600 text-white rounded"
         >
-          Play Again
+          Start Game
         </button>
-        <button
-          @click="goHome"
-          class="px-4 py-2 bg-gray-600 text-white rounded"
-        >
-          Go Home
-        </button>
+      </div>
+
+      <div v-else>
+        <div v-if="!questionError && currentQuestion">
+          <div class="text-center mb-4 text-gray-700 font-medium">
+            Question {{ currentIndex }} of {{ questionsData.length }}
+          </div>
+          <QuestionCard :question="currentQuestion" @answerSelected="handleAnswer" />
+        </div>
+
+        <div v-else-if="questionError" class="text-red-600 font-semibold p-4">
+          Error: {{ questionError.message }}
+        </div>
+
+        <div v-else-if="!questionError && questionsData.length === 0" class="text-gray-500 p-4">
+          No questions available.
+        </div>
+
+        <div v-else-if="!currentQuestion" class="text-center p-6">
+          <h2 class="text-xl font-semibold mb-4">Game Over!</h2>
+          <p class="mb-4">
+            You got {{ correctAnswersCount }} out of {{ questionsData.length }} questions right.
+          </p>
+          <button
+            @click="startGame"
+            class="mr-4 px-4 py-2 bg-green-600 text-white rounded"
+          >
+            Play Again
+          </button>
+          <button
+            class="px-4 py-2 bg-gray-600 text-white rounded"
+          ><RouterLink to="/">Go Home</RouterLink>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -52,6 +60,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '../supabaseClient'
 import QuestionCard from './QuestionCard.vue'
+import LoadingSpinner from './LoadingScreen.vue'
 
 interface Question {
   id: number
@@ -75,17 +84,15 @@ function shuffle<T>(array: T[]): T[] {
   return array
 }
 
-const router = useRouter()
-
 const questionsData = ref<Question[]>([])
 const answersData = ref<string[]>([])
 const questionError = ref<Error | null>(null)
 const currentQuestion = ref<DisplayQuestion | null>(null)
-
 const usedQuestionIds = ref<Set<number>>(new Set())
 const gameStarted = ref(false)
 const correctAnswersCount = ref(0)
 const currentIndex = ref(0)
+const loading = ref(false)
 
 async function getQuestionsAndAnswers() {
   const { data, error } = await supabase
@@ -151,8 +158,12 @@ async function startGame() {
   usedQuestionIds.value = new Set()
   correctAnswersCount.value = 0
   currentIndex.value = 0
+  loading.value = true
+
   await getQuestionsAndAnswers()
   generateQuestion()
+
+  loading.value = false
   gameStarted.value = true
 }
 
@@ -167,9 +178,5 @@ function handleAnswer(selectedAnswer: string) {
   }
 
   generateQuestion()
-}
-
-function goHome() {
-  router.push({ path: '/' })
 }
 </script>
