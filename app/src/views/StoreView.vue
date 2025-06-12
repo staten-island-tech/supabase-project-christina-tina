@@ -1,5 +1,5 @@
 <template>
-  <div class>
+  <div class="w-[80vw] flex flex-row flex-wrap items-center justify-center mx-auto mt-4">
     <StoreItem v-for="item in items || []" :key="item.id" :item="item" />
   </div>
 </template>
