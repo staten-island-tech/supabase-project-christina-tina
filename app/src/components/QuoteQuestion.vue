@@ -47,7 +47,7 @@
           </button>
           <button
             class="px-4 py-2 bg-gray-600 text-white rounded"
-          ><RouterLink to="/">Go Home</RouterLink>
+          ><RouterLink to="/game">Choose another game</RouterLink>
           </button>
         </div>
       </div>
@@ -61,20 +61,7 @@ import { useRouter } from 'vue-router'
 import { supabase } from '../supabaseClient'
 import QuestionCard from './QuestionCard.vue'
 import LoadingSpinner from './LoadingScreen.vue'
-
-interface Question {
-  id: number
-  category: string
-  question: string
-  correct_ans: string
-}
-
-interface DisplayQuestion {
-  id: number
-  text: string
-  correct: string
-  choices: string[]
-}
+import type { Question, DisplayQuestion } from '../types'
 
 function shuffle<T>(array: T[]): T[] {
   for (let i = array.length - 1; i >= 1; i--) {
