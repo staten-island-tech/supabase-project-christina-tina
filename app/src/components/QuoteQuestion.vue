@@ -54,6 +54,9 @@ import { useRouter } from 'vue-router'
 import { supabase } from '../supabaseClient'
 import QuestionCard from './QuestionCard.vue'
 import LoadingSpinner from './LoadingScreen.vue'
+import { useStore } from '../stores/user'
+
+const store = useStore()
 
 interface Question {
   id: number
@@ -158,8 +161,9 @@ function handleAnswer(selectedAnswer: string) {
 
   if (selectedAnswer === currentQuestion.value.correct) {
     alert('Correct!')
-    //add to currency+score
     correctAnswersCount.value++
+    store.addCoins(50)
+    store.addScore(1)
   } else {
     alert('Wrong!')
   }

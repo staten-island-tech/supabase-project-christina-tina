@@ -92,12 +92,29 @@ async function getUserByID(id:string) { //fetch user data from public users tabl
         return {data, error}
     }
   
-    function addCoins(amount: number) {
+     async function addCoins(amount: number) {
       user.value!.currency += amount
+      const { data, error } = await supabase
+  .from('users')                   // table name
+  .update({ currency: user.value!.currency })  // column and new value
+  .eq('username', user.value!.username)                    // match row
+  if (error) {
+    alert("error updating coins"+error)
+    return
+  }
     }
 
-    function addScore(amount: number) {
+    async function addScore(amount: number) {
       user.value!.score += amount
+      const { data, error } = await supabase
+  .from('users')                   // table name
+  .update({ score: user.value!.score })  // column and new value
+  .eq('username', user.value!.username)                    // match row
+
+  if (error) {
+    alert("error updating score"+error)
+    return
+  }
     }
 
   return {
@@ -106,6 +123,8 @@ async function getUserByID(id:string) { //fetch user data from public users tabl
     errorMessage,
     signOut,
     signUp,
-    logIn
+    logIn,
+    addCoins,
+    addScore
   }
   })
