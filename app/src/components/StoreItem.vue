@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-base-200 w-[26%] shadow-sm mx-auto">
+  <div class="card bg-base-200 w-[26%] shadow-sm mx-auto m-5">
     <div class="card-body">
       <h2 class="card-title">{{ item?.name }} ({{ item?.price }} coins)</h2>
       <p>

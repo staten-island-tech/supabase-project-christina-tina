@@ -22,13 +22,12 @@ import type { Ref } from 'vue'
 import type { UserForm } from '../../types'
 import { useStore } from '../../stores/user'
 import { useRouter } from 'vue-router'
-import SignUp from './Signup.vue'
 
 const router = useRouter()
 
 const loginForm = reactive<UserForm>({
-  email: 'christinach709@gmail.com',
-  password: 'password',
+  email: '',
+  password: '',
   username: '',
 })
 const errorMessage = ref<string>('')

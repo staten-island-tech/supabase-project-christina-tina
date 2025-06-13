@@ -31,7 +31,7 @@ import { ref, reactive } from 'vue'
 import { useStore } from '../../stores/user'
 import { useRouter } from 'vue-router'
 import type { UserForm } from '../../types'
-import LogIn from './LogIn.vue'
+
 const store = useStore()
 const router = useRouter()
 const signupForm = reactive<UserForm>({

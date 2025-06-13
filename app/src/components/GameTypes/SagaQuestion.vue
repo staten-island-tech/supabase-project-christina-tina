@@ -15,7 +15,7 @@
         </button>
       </div>
 
-      <div v-else class="">
+      <div v-else class="m-auto flex flex-wrap items-center justify-center">
         <div v-if="!questionError && currentQuestion" class="flex flex-row">
           <div>
             <div class="text-center mb-4 text-gray-700 font-medium">

@@ -11,10 +11,10 @@
         <RouterLink to="/signin" class="btn">Go to Sign Up/Login</RouterLink>
       </div> -->
       <UserStats />
-      <div class="routers fixed right-4 bottom-4 space-y-2">
-        <RouterLink to="/profile" class="btn btn-xl btn-primary">Profile</RouterLink>
-        <RouterLink to="/store" class="btn btn-xl btn-primary">Store</RouterLink>
-        <RouterLink to="/game" class="btn btn-xl btn-primary">Game</RouterLink>
+      <div class="routers fixed right-4 bottom-4 space-y-2 flex flex-row">
+        <RouterLink to="/profile" class="btn btn-xl btn-primary mx-3">Profile</RouterLink>
+        <RouterLink to="/store" class="btn btn-xl btn-primary mx-3">Store</RouterLink>
+        <RouterLink to="/game" class="btn btn-xl btn-primary mx-3">Game</RouterLink>
       </div>
     </div>
   </main>
