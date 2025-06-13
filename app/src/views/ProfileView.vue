@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import UserProfile from '../components/UserFiles/UserProfile.vue'
 </script>
 

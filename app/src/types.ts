@@ -34,4 +34,10 @@ interface DisplayQuestion {
   choices: string[]
 }
 
-export type {User, UserForm, Powerup, Question, DisplayQuestion}
+interface UserLeaderboard {
+  username: string
+  currency: number
+  score: number
+}
+
+export type {User, UserForm, Powerup, Question, DisplayQuestion, UserLeaderboard}

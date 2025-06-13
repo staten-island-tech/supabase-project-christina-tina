@@ -1,13 +1,11 @@
 <template>
   <div>
-    <StatsView/>
+    <UserStats />
   </div>
 </template>
 
-<script setup>
-import StatsView from '../components/UserFiles/UserStats.vue'
+<script setup lang="ts">
+import UserStats from '../components/UserFiles/UserStats.vue'
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
