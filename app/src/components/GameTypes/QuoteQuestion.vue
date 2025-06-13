@@ -68,41 +68,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { supabase } from '../supabaseClient'
-import QuestionCard from './QuestionCard.vue'
-import LoadingSpinner from './LoadingScreen.vue'
-import { useStore } from '../stores/user'
-
-const store = useStore()
-const user = store.user
-
-interface Question {
-  id: number
-  category: string
-  question: string
-  correct_ans: string
-}
-
-interface DisplayQuestion {
-  id: number
-  text: string
-  correct: string
-  choices: string[]
-}
-
-function shuffle<T>(array: T[]): T[] {
-  for (let i = array.length - 1; i >= 1; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[array[i], array[j]] = [array[j], array[i]]
-  }
-  return array
-}
-import { ref } from 'vue'
 import { supabase } from '../../supabaseClient'
 import QuestionCard from '../QuestionCard.vue'
 import LoadingSpinner from '../LoadingScreen.vue'
-import type { Question, DisplayQuestion } from '../../types'
+import { useStore } from '../../stores/user'
+import type { Question, DisplayQuestion, Powerup } from '../../types'
 import { shuffle } from '../../function'
+import { random } from 'gsap'
+
+const store = useStore()
+const user = store.user
 
 const questionsData = ref<Question[]>([])
 const answersData = ref<string[]>([])
@@ -198,8 +173,6 @@ function handleAnswer(selectedAnswer: string) {
   generateQuestion()
 }
 
-import type { Powerup } from '@/types'
-import { random } from 'gsap'
 const powerups = ref<Powerup[]>([])
 async function fetchPowerups() {
   const { data, error } = await supabase
@@ -232,11 +205,7 @@ async function handlePowerup(powerup: Powerup, currentQuestion: DisplayQuestion)
       // create copy
       const copy = array.slice()
       // shuffle copy
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1))
-        ;[copy[i], copy[j]] = [copy[j], copy[i]]
-      }
-      return copy.slice(0, 2)
+      return shuffle(copy)
     }
     const randomWrongs = getTwoRandomItems(wrongs)
     result.value = `The answer is not "${randomWrongs[0]}" or "${randomWrongs[1]}"`

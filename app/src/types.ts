@@ -20,4 +20,18 @@ interface Powerup {
     amount:number
 }
 
-export type {User, UserForm, Powerup}
+interface Question {
+  id: number
+  category: string
+  question: string
+  correct_ans: string
+}
+
+interface DisplayQuestion {
+  id: number
+  text: string
+  correct: string
+  choices: string[]
+}
+
+export type {User, UserForm, Powerup, Question, DisplayQuestion}
