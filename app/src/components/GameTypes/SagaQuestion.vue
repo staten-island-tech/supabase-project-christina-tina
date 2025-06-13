@@ -2,9 +2,9 @@
   <div>
     <LoadingSpinner
       v-if="loading"
-      message="Loading questions..."
+      message="Loading saga questions..."
       sizeClass="w-16 h-16"
-      colorClass="text-blue-600"
+      colorClass="text-purple-600"
       backgroundClass="bg-white/70"
     />
 
@@ -12,9 +12,9 @@
       <div v-if="!gameStarted">
         <button
           @click="startGame"
-          class="px-4 py-2 bg-blue-600 text-white rounded"
+          class="px-4 py-2 bg-purple-600 text-white rounded"
         >
-          Start Game
+          Start Saga Trivia
         </button>
       </div>
 
@@ -31,13 +31,13 @@
         </div>
 
         <div v-else-if="!questionError && questionsData.length === 0" class="text-gray-500 p-4">
-          No questions available.
+          No saga questions available.
         </div>
 
         <div v-else-if="!currentQuestion" class="text-center p-6">
           <h2 class="text-xl font-semibold mb-4">Game Over!</h2>
           <p class="mb-4">
-            You got {{ correctAnswersCount }} out of {{ questionsData.length }} questions right.
+            You got {{ correctAnswersCount }} out of {{ questionsData.length }} correct.
           </p>
           <button
             @click="startGame"
@@ -45,9 +45,8 @@
           >
             Play Again
           </button>
-          <button
-            class="px-4 py-2 bg-gray-600 text-white rounded"
-          ><RouterLink to="/game">Choose another game</RouterLink>
+          <button class="px-4 py-2 bg-gray-600 text-white rounded">
+            <RouterLink to="/game">Choose another game</RouterLink>
           </button>
         </div>
       </div>
@@ -57,19 +56,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { supabase } from '../supabaseClient'
-import QuestionCard from './QuestionCard.vue'
-import LoadingSpinner from './LoadingScreen.vue'
-import type { Question, DisplayQuestion } from '../types'
-
-function shuffle<T>(array: T[]): T[] {
-  for (let i = array.length - 1; i >= 1; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[array[i], array[j]] = [array[j], array[i]]
-  }
-  return array
-}
+import { supabase } from '../../supabaseClient'
+import QuestionCard from '../QuestionCard.vue'
+import LoadingSpinner from '../LoadingScreen.vue'
+import type { Question, DisplayQuestion } from '../../types'
+import { shuffle } from '../../function'
 
 const questionsData = ref<Question[]>([])
 const answersData = ref<string[]>([])
@@ -85,24 +76,19 @@ async function getQuestionsAndAnswers() {
   const { data, error } = await supabase
     .from('questions')
     .select('*')
-    .ilike('category', '%quote%')
+    .ilike('category', '%saga%')
 
   if (error) {
     questionError.value = error
     return
   }
 
-  const quoteQuestions = data as Question[]
-  questionsData.value = quoteQuestions
-  answersData.value = quoteQuestions.map(q => q.correct_ans)
+  const sagaQuestions = data as Question[]
+  questionsData.value = sagaQuestions
+  answersData.value = [...new Set(sagaQuestions.map(q => q.correct_ans))]
 }
 
 function generateQuestion(): void {
-  if (!questionsData.value.length || answersData.value.length < 2) {
-    currentQuestion.value = null
-    return
-  }
-
   const unusedQuestions = questionsData.value.filter(
     (q) => !usedQuestionIds.value.has(q.id)
   )
@@ -117,13 +103,9 @@ function generateQuestion(): void {
   const correctAnswer = selected.correct_ans
 
   const incorrectAnswers = new Set<string>()
-  while (
-    incorrectAnswers.size < Math.min(3, answersData.value.length - 1)
-  ) {
+  while (incorrectAnswers.size < 3 && answersData.value.length > 1) {
     const rand = answersData.value[Math.floor(Math.random() * answersData.value.length)]
-    if (rand !== correctAnswer) {
-      incorrectAnswers.add(rand)
-    }
+    if (rand !== correctAnswer) incorrectAnswers.add(rand)
   }
 
   const allAnswers = shuffle([correctAnswer, ...Array.from(incorrectAnswers)])
@@ -161,7 +143,7 @@ function handleAnswer(selectedAnswer: string) {
     alert('Correct!')
     correctAnswersCount.value++
   } else {
-    alert('Wrong!')
+    alert(`Wrong! The correct answer was ${currentQuestion.value.correct}`)
   }
 
   generateQuestion()

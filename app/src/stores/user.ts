@@ -76,13 +76,13 @@ export const useStore = defineStore('user', () => {
     isSignedIn.value = true
     
     user.value = reactive<User>({
+      id: loginData.user.id,
       email: email,
       username: temp[0].username,
-      profile_pic: temp[0].profile_pic,
       currency: temp[0].currency,
       score: temp[0].score,
-      items: [],
     })
+
     
   }
 async function getUserByID(id:string) { //fetch user data from public users table, supabase.auth.getUser() fetches from auth users table
@@ -99,6 +99,6 @@ async function getUserByID(id:string) { //fetch user data from public users tabl
     errorMessage,
     signOut,
     signUp,
-    logIn
+    logIn,
   }
   })

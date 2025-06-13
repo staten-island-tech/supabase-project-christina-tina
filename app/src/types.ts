@@ -1,10 +1,9 @@
 interface User {
+    id: string
     email: string
     username: string
-    profile_pic: string
-    currency: number
-    score: number
-    items: object[]
+    currency?: number
+    score?: number
 }
 
 interface UserForm {
@@ -27,4 +26,10 @@ interface DisplayQuestion {
     choices: string[]
 }
 
-export type {User, UserForm, Question, DisplayQuestion}
+interface UserLeaderboard {
+  username: string
+  currency: number
+  score: number
+}
+
+export type {User, UserForm, Question, DisplayQuestion, UserLeaderboard}

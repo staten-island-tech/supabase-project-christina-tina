@@ -48,7 +48,7 @@
         <li><RouterLink to="/">Home</RouterLink></li>
         <li><RouterLink to="/signin">Signin/Login</RouterLink></li>
         <li><RouterLink to="/profile">Profile</RouterLink></li>
-        <li><a>View Stats</a></li>
+        <li><RouterLink to="/stats">View Stats</RouterLink></li>
         <li><a>something</a></li>
         <li><a>Log Out</a></li>
       </ul>
