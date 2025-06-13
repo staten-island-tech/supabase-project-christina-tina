@@ -25,7 +25,7 @@
     </div>
   </div>
   <h2>User Inventory</h2>
-  <InventoryItem v-for="item in inventory" :key="item.id" :item="item" :amount="item.amount" />
+  <InventoryItem v-for="item in inventory" :key="item.id" :item="item" :amount="item.amount || 0" />
   <h2>User Achievements</h2>
 </template>
 
@@ -37,63 +37,45 @@ import InventoryItem from './InventoryItem.vue'
 import { supabase } from '../supabaseClient'
 const store = useStore()
 const user = store.user
-const inventory = ref<PowerupWithAmount[]>([])
-
-interface PowerupWithAmount extends Powerup {
-  amount: number
-}
-async function fetchUserInventory(userId: string) {
+const inventory = ref<Powerup[]>([])
+async function fetchInventory() {
   const { data, error } = await supabase
     .from('player_inventory')
-    .select(
-      `
-      item_id,
-      items (
-        name,
-        description,
-        type,
-        price
-      )
-    `,
-    )
-    .eq('user_id', userId)
+    .select('item_id, name, description, price')
+    .eq('user_id', user?.id)
 
   if (error) {
-    console.error('Error fetching inventory:', error)
+    alert('Error fetching inventory:' + error)
+    inventory.value = []
     return
   }
 
-  // Map to count amounts per item_id
-  const itemMap = new Map<number, PowerupWithAmount>()
-
-  if (!data) return
-
-  for (const row of data) {
-    const item = row.items
-    if (!item) continue // just in case
-
-    if (!itemMap.has(row.item_id)) {
-      itemMap.set(row.item_id, {
-        id: row.item_id,
-        name: item.name,
-        description: item.description,
-        type: item.type,
-        price: item.price,
-        amount: 1,
-      })
-    } else {
-      itemMap.get(row.item_id)!.amount += 1
-    }
+  if (data) {
+    inventory.value = data.map((item) => ({
+      id: item.item_id,
+      name: item.name,
+      description: item.description,
+      price: item.price,
+    }))
+  } else {
+    inventory.value = []
   }
-
-  inventory.value = Array.from(itemMap.values())
+  inventory.value = groupItemsWithAmount(inventory.value)
 }
 
-onMounted(() => {
-  if (user?.id) {
-    fetchUserInventory(user.id)
+function groupItemsWithAmount(items: Powerup[]) {
+  const map = new Map<number, Powerup & { amount: number }>()
+
+  for (const item of items) {
+    if (map.has(item.id)) {
+      map.get(item.id)!.amount += 1
+    } else {
+      map.set(item.id, { ...item, amount: 1 })
+    }
   }
-})
+  return Array.from(map.values())
+}
+onMounted(fetchInventory)
 </script>
 
 <style scoped></style>

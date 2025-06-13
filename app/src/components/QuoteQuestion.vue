@@ -57,6 +57,7 @@ import LoadingSpinner from './LoadingScreen.vue'
 import { useStore } from '../stores/user'
 
 const store = useStore()
+const user = store.user
 
 interface Question {
   id: number
@@ -170,5 +171,17 @@ function handleAnswer(selectedAnswer: string) {
   }
 
   generateQuestion()
+}
+
+async function fetchPowerups() {
+  const { data, error } = await supabase
+    .from('player_inventory')
+    .select('item_id, name, description, price')
+    .eq('user_id', user?.id)
+
+  if (error) {
+    console.error('Error fetching inventory:', error)
+    return
+  }
 }
 </script>

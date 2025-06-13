@@ -37,7 +37,6 @@ async function handleLogin() {
     errorMessage.value = error
     return
   } else {
-    console.log('Login Successful', store.user, store.isSignedIn)
     router.push('/')
   }
 }

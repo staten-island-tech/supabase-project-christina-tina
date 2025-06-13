@@ -7,6 +7,7 @@
     </button>
 
     <div class="routers absolute right-4 bottom-4">
+      <button class="btn btn-xl"><RouterLink to="/profile">Profile</RouterLink></button>
       <button class="btn btn-xl"><RouterLink to="/store">Store</RouterLink></button>
       <button class="btn btn-xl"><RouterLink to="/game">Game</RouterLink></button>
     </div>
