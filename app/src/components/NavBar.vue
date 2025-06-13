@@ -62,7 +62,6 @@
             <li>
               <RouterLink to="/profile">Profile</RouterLink>
             </li>
-            <li><a>Settings</a></li>
             <li><LogoutBtn /></li>
           </ul>
         </div>
@@ -74,8 +73,8 @@
       <ul class="menu bg-base-200 min-h-full w-80 p-4 text-xl">
         <li><RouterLink to="/">Home</RouterLink></li>
         <li><RouterLink to="/profile">Profile</RouterLink></li>
-        <li><RouterLink to="/stats">View Stats</RouterLink></li>
-        <li><router-link to="/store">Store</router-link></li>
+        <li><RouterLink to="/achieve">Achievements (Coming soon..)</RouterLink></li>
+        <li><Router-link to="/store">Store</Router-link></li>
         <li><LogoutBtn /></li>
       </ul>
     </div>

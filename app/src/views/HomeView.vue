@@ -10,7 +10,7 @@
       <!-- <div v-if="!store.isSignedIn" class="flex justify-center mb-6">
         <RouterLink to="/signin" class="btn">Go to Sign Up/Login</RouterLink>
       </div> -->
-
+      <UserStats />
       <div class="routers fixed right-4 bottom-4 space-y-2">
         <RouterLink to="/profile" class="btn btn-xl">Profile</RouterLink>
         <RouterLink to="/store" class="btn btn-xl">Store</RouterLink>
@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import { useStore } from '../stores/user'
 import { useRouter } from 'vue-router'
+import UserStats from '../components/UserFiles/UserStats.vue'
 
 const router = useRouter()
 const store = useStore()

@@ -21,7 +21,7 @@
       />
       <button class="btn w-full" type="submit">Sign Up</button>
     </form>
-    <p>Already have an account? Try logging in</p>
+    <p><RouterLink to="/LogIn">Home</RouterLink>Already have an account? Try logging in</p>
     <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
 </template>
@@ -31,6 +31,7 @@ import { ref, reactive } from 'vue'
 import { useStore } from '../../stores/user'
 import { useRouter } from 'vue-router'
 import type { UserForm } from '../../types'
+import LogIn from './LogIn.vue'
 const store = useStore()
 const router = useRouter()
 const signupForm = reactive<UserForm>({
