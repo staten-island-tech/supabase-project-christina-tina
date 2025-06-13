@@ -57,7 +57,7 @@
             Play Again
           </button>
           <button class="px-4 py-2 bg-gray-600 text-white rounded">
-            <RouterLink to="/">Go Home</RouterLink>
+            <RouterLink to="/game">Choose another game</RouterLink>
           </button>
         </div>
       </div>
@@ -97,6 +97,12 @@ function shuffle<T>(array: T[]): T[] {
   }
   return array
 }
+import { ref } from 'vue'
+import { supabase } from '../../supabaseClient'
+import QuestionCard from '../QuestionCard.vue'
+import LoadingSpinner from '../LoadingScreen.vue'
+import type { Question, DisplayQuestion } from '../../types'
+import { shuffle } from '../../function'
 
 const questionsData = ref<Question[]>([])
 const answersData = ref<string[]>([])
@@ -186,6 +192,7 @@ function handleAnswer(selectedAnswer: string) {
   } else {
     alert('Wrong!')
     store.changeScore(-1)
+    alert(`Wrong! The correct answer was: ${currentQuestion.value.correct}`)
   }
 
   generateQuestion()

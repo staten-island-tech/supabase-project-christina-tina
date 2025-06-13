@@ -11,6 +11,13 @@
       >
         Quote Trivia
       </button>
+
+      <button
+        @click="selectGame('saga')"
+        class="w-full py-2 mb-3 bg-purple-600 text-white rounded hover:bg-purple-700"
+      >
+        Saga Trivia
+      </button>
     </div>
 
     <div v-else>
@@ -22,15 +29,16 @@
       </button>
 
       <QuoteQuestion v-if="selectedGame === 'quote'" />
-      <!-- Add other games here -->
+      <SagaQuestion v-if="selectedGame === 'saga'" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import QuoteQuestion from '../components/QuoteQuestion.vue'
 import { useRouter } from 'vue-router'
+import QuoteQuestion from '../components/GameTypes/QuoteQuestion.vue'
+import SagaQuestion from '../components/GameTypes/SagaQuestion.vue'
 
 const selectedGame = ref<string | null>(null)
 const started = ref(false)

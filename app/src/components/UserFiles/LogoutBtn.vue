@@ -6,8 +6,8 @@
 </template>
 
 <script setup lang="ts">
-import { supabase } from '../supabaseClient'
-import { useStore } from '../stores/user'
+import { supabase } from '../../supabaseClient'
+import { useStore } from '../../stores/user'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 

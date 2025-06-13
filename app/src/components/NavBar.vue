@@ -71,18 +71,20 @@
     <div class="drawer-side">
       <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay"></label>
       <ul class="menu bg-base-200 min-h-full w-80 p-4 text-xl">
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/signin">Signin/Login</router-link></li>
-        <li><router-link to="/profile">Profile</router-link></li>
+        <li><RouterLink to="/">Home</RouterLink></li>
+        <li><RouterLink to="/signin">Signin/Login</RouterLink></li>
+        <li><RouterLink to="/profile">Profile</RouterLink></li>
+        <li><RouterLink to="/stats">View Stats</RouterLink></li>
         <li><router-link to="/store">Store</router-link></li>
         <li><LogoutBtn v-if="store.isSignedIn" /></li>
+        <li><a>Log Out</a></li>
       </ul>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import LogoutBtn from '../components/LogoutBtn.vue'
+import LogoutBtn from './UserFiles/LogoutBtn.vue'
 import { useStore } from '../stores/user'
 const store = useStore()
 </script>
