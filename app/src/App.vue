@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import NavBar from './components/NavBar.vue'
+import { useStore } from './stores/user'
+import SigninView from './views/SigninView.vue'
+const store = useStore()
 </script>
 
 <template>
-  <header class="absolute top-0 left-0 w-full"><NavBar /></header>
-
-  <RouterView />
+  <SigninView v-if="!store.isSignedIn" />
+  <NavBar v-else />
 </template>
 
 <style scoped></style>

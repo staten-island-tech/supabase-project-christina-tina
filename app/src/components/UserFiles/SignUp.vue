@@ -1,11 +1,25 @@
 <template>
-  <div>
-    <h2>Sign Up</h2>
-    <form @submit.prevent="handleSignup()">
-      <input class="input" v-model="signupForm.email" type="email" placeholder="Email" />
-      <input class="input" v-model="signupForm.password" type="password" placeholder="Password" />
-      <input class="input" v-model="signupForm.username" type="text" placeholder="Username" />
-      <button class="btn" type="submit">Sign Up</button>
+  <div class="flex flex-col justify-around min-h-[50vh] p-5">
+    <form @submit.prevent="handleSignup()" class="flex flex-col space-y-4">
+      <input
+        class="input mb-4 w-full"
+        v-model="signupForm.email"
+        type="email"
+        placeholder="Email"
+      />
+      <input
+        class="input mb-4 w-full"
+        v-model="signupForm.password"
+        type="password"
+        placeholder="Password"
+      />
+      <input
+        class="input mb-4 w-full"
+        v-model="signupForm.username"
+        type="text"
+        placeholder="Username"
+      />
+      <button class="btn w-full" type="submit">Sign Up</button>
     </form>
     <p>Already have an account? Try logging in</p>
     <p v-if="errorMessage">{{ errorMessage }}</p>

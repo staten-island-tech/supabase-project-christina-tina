@@ -1,10 +1,14 @@
 <template>
-  <div>
-    <h2>Log In</h2>
-    <form @submit.prevent="handleLogin()">
-      <input class="input" v-model="loginForm.email" type="email" placeholder="Email" />
-      <input class="input" v-model="loginForm.password" type="password" placeholder="Password" />
-      <button class="btn" type="submit">Log In</button>
+  <div class="flex flex-col justify-around min-h-[50vh] p-5">
+    <form @submit.prevent="handleLogin()" class="flex flex-col space-y-4">
+      <input class="input mb-4 w-full" v-model="loginForm.email" type="email" placeholder="Email" />
+      <input
+        class="input mb-4 w-full"
+        v-model="loginForm.password"
+        type="password"
+        placeholder="Password"
+      />
+      <button class="btn w-full" type="submit">Log In</button>
     </form>
     <p>Don't have an account? Try signing up</p>
     <p v-if="errorMessage">{{ errorMessage }}</p>

@@ -21,7 +21,7 @@
           </label>
         </div>
         <div class="mx-2 flex-1 px-2 text-center">
-          <a class="btn btn-ghost text-3xl">Title</a>
+          <a class="btn btn-ghost text-3xl">Epic the Musical Game</a>
         </div>
         <label class="swap swap-rotate">
           <!-- this hidden checkbox controls the state -->
@@ -59,25 +59,24 @@
             tabindex="0"
             class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
-            <li v-if="store.isSignedIn">
+            <li>
               <RouterLink to="/profile">Profile</RouterLink>
             </li>
             <li><a>Settings</a></li>
-            <li><LogoutBtn v-if="store.isSignedIn" /></li>
+            <li><LogoutBtn /></li>
           </ul>
         </div>
       </div>
+      <RouterView />
     </div>
     <div class="drawer-side">
       <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay"></label>
       <ul class="menu bg-base-200 min-h-full w-80 p-4 text-xl">
         <li><RouterLink to="/">Home</RouterLink></li>
-        <li><RouterLink to="/signin">Signin/Login</RouterLink></li>
         <li><RouterLink to="/profile">Profile</RouterLink></li>
         <li><RouterLink to="/stats">View Stats</RouterLink></li>
         <li><router-link to="/store">Store</router-link></li>
-        <li><LogoutBtn v-if="store.isSignedIn" /></li>
-        <li><a>Log Out</a></li>
+        <li><LogoutBtn /></li>
       </ul>
     </div>
   </div>

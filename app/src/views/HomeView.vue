@@ -1,15 +1,15 @@
 <template>
   <main class="flex justify-center mt-10">
     <div class="w-full max-w-3xl px-4">
-      <h1 class="text-center text-4xl font-bold mb-6">hello this is the home page</h1>
+      <h1 class="text-center text-4xl font-bold mb-6">welcome! this is the home page</h1>
 
-      <p v-if="!store.isSignedIn" class="text-center mb-4">
+      <!-- <p v-if="!store.isSignedIn" class="text-center mb-4">
         Please create an account or sign in to get started
-      </p>
+      </p> -->
 
-      <div v-if="!store.isSignedIn" class="flex justify-center mb-6">
+      <!-- <div v-if="!store.isSignedIn" class="flex justify-center mb-6">
         <RouterLink to="/signin" class="btn">Go to Sign Up/Login</RouterLink>
-      </div>
+      </div> -->
 
       <div class="routers fixed right-4 bottom-4 space-y-2">
         <RouterLink to="/profile" class="btn btn-xl">Profile</RouterLink>
