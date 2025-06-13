@@ -12,9 +12,9 @@
       </div> -->
 
       <div class="routers fixed right-4 bottom-4 space-y-2">
-        <RouterLink to="/profile" class="btn btn-xl">Profile</RouterLink>
-        <RouterLink to="/store" class="btn btn-xl">Store</RouterLink>
-        <RouterLink to="/game" class="btn btn-xl">Game</RouterLink>
+        <RouterLink to="/profile" class="btn btn-xl btn-primary">Profile</RouterLink>
+        <RouterLink to="/store" class="btn btn-xl btn-primary">Store</RouterLink>
+        <RouterLink to="/game" class="btn btn-xl btn-primary">Game</RouterLink>
       </div>
     </div>
   </main>

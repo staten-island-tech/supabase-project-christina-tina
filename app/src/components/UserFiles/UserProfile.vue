@@ -1,19 +1,19 @@
 <template>
   <div class="w-[80vw] max-w-2xl mx-auto px-4 py-8">
-    <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">User Profile</h2>
+    <h2 class="text-3xl font-bold text-center">User Profile</h2>
     <div class="space-y-6 text-center">
       <div>
-        <h3 class="text-lg font-semibold text-gray-600">Username</h3>
-        <p class="text-gray-800 text-base">{{ user?.username }}</p>
+        <h3 class="text-lg font-semibold">Username</h3>
+        <p class="text-base">{{ user?.username }}</p>
       </div>
 
       <div>
-        <h3 class="text-lg font-semibold text-gray-600">Email</h3>
-        <p class="text-gray-800 text-base">{{ user?.email }}</p>
+        <h3 class="text-lg font-semibold">Email</h3>
+        <p class="text-base">{{ user?.email }}</p>
       </div>
     </div>
 
-    <h2 class="text-2xl font-semibold text-gray-800 mt-10 mb-4 text-center">User Stats</h2>
+    <h2 class="text-2xl font-semibold mt-10 mb-4 text-center">User Stats</h2>
 
     <div class="flex flex-col sm:flex-row gap-4">
       <div class="flex-1 border border-blue-200 rounded-lg p-6 text-center">

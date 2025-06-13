@@ -1,5 +1,5 @@
 <template>
-  <div class="drawer">
+  <div class="drawer" :data-theme="theme">
     <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
       <div class="navbar bg-base-300">
@@ -25,7 +25,7 @@
         </div>
         <label class="swap swap-rotate">
           <!-- this hidden checkbox controls the state -->
-          <input type="checkbox" />
+          <input type="checkbox" @change="toggleTheme" :checked="theme === 'dark'" />
 
           <!-- sun icon -->
           <svg
@@ -67,7 +67,7 @@
           </ul>
         </div>
       </div>
-      <RouterView />
+      <RouterView class="h-screen" />
     </div>
     <div class="drawer-side">
       <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay"></label>
@@ -86,6 +86,21 @@
 import LogoutBtn from './UserFiles/LogoutBtn.vue'
 import { useStore } from '../stores/user'
 const store = useStore()
+
+import { ref, watchEffect, onMounted } from 'vue'
+const theme = ref('light') // default to light
+
+onMounted(() => {
+  // Optional: load saved theme from localStorage
+  const saved = localStorage.getItem('theme')
+  if (saved) theme.value = saved
+})
+
+// Toggle between light and dark
+function toggleTheme() {
+  theme.value = theme.value === 'light' ? 'dark' : 'light'
+  localStorage.setItem('theme', theme.value)
+}
 </script>
 
 <style scoped></style>
