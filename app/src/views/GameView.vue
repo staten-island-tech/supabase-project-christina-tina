@@ -1,6 +1,6 @@
 <template>
-  <div class="max-w-md mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">Game</h1>
+  <div class="min-w-[80vw] mx-auto p-6">
+    <h1 class="text-2xl font-bold text-center mb-4">Game</h1>
 
     <div v-if="!started">
       <h2 class="text-xl font-semibold mb-4">Choose a Game Type</h2>
@@ -20,11 +20,8 @@
       </button>
     </div>
 
-    <div v-else>
-      <button
-        @click="goBack()"
-        class="mb-4 text-sm text-gray-500 hover:underline"
-      >
+    <div v-else class="">
+      <button @click="goBack()" class="mb-4 text-sm text-gray-500 hover:underline">
         ← Back Home
       </button>
 
