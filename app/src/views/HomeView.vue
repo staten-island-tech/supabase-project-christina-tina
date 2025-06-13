@@ -1,7 +1,7 @@
 <template>
   <main class="flex justify-center mt-10">
     <div class="w-full max-w-3xl px-4">
-      <h1 class="text-center text-4xl font-bold mb-6">welcome! this is the home page</h1>
+      <h1 class="text-center text-4xl font-bold mb-6">Welcome! This is the home page</h1>
 
       <!-- <p v-if="!store.isSignedIn" class="text-center mb-4">
         Please create an account or sign in to get started
