@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import LogoutBtn from '../components/LogoutBtn.vue'
+import LogoutBtn from './UserFiles/LogoutBtn.vue'
 import { useStore } from '../stores/user'
 const store = useStore()
 </script>

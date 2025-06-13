@@ -1,9 +1,11 @@
 <template>
-  <div><UserProfile /></div>
+  <div>
+    <UserProfile />
+  </div>
 </template>
 
-<script setup lang="ts">
-import UserProfile from '@/components/UserProfile.vue'
+<script setup>
+import UserProfile from '../components/UserFiles/UserProfile.vue'
 </script>
 
 <style scoped></style>

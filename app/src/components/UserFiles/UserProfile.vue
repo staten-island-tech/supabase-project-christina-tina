@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { useStore } from '../stores/user'
+import { useStore } from '../../stores/user'
 const store = useStore()
 const user = store.user
 </script>

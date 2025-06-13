@@ -26,8 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import LogIn from '../components/LogIn.vue'
-import SignUp from '../components/SignUp.vue'
+import LogIn from '../components/UserFiles/LogIn.vue'
+import SignUp from '../components/UserFiles/SignUp.vue'
 import { ref } from 'vue'
 
 const mode = ref('login')
