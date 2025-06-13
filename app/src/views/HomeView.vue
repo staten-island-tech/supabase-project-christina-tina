@@ -1,13 +1,26 @@
 <template>
-  <main>
-    <h1 class="text-center text-4xl font-bold mt-10">hello this is the home page</h1>
-    <SignoutButton v-if="store.isSignedIn" />
-    <div class="routers"></div>
+  <main class="flex justify-center mt-10">
+    <div class="w-full max-w-3xl px-4">
+      <h1 class="text-center text-4xl font-bold mb-6">welcome! this is the home page</h1>
+
+      <!-- <p v-if="!store.isSignedIn" class="text-center mb-4">
+        Please create an account or sign in to get started
+      </p> -->
+
+      <!-- <div v-if="!store.isSignedIn" class="flex justify-center mb-6">
+        <RouterLink to="/signin" class="btn">Go to Sign Up/Login</RouterLink>
+      </div> -->
+
+      <div class="routers fixed right-4 bottom-4 space-y-2">
+        <RouterLink to="/profile" class="btn btn-xl">Profile</RouterLink>
+        <RouterLink to="/store" class="btn btn-xl">Store</RouterLink>
+        <RouterLink to="/game" class="btn btn-xl">Game</RouterLink>
+      </div>
+    </div>
   </main>
 </template>
 
 <script setup lang="ts">
-import SignoutButton from '../components/LogoutBtn.vue'
 import { useStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 

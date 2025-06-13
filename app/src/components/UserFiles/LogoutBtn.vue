@@ -1,13 +1,13 @@
 <template>
   <div>
-    <button @click="signOut">log out</button>
+    <button class="" @click="signOut()">Log Out</button>
     <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { supabase } from '../lib/supabaseClient'
-import { useStore } from '../stores/userStore'
+import { supabase } from '../../supabaseClient'
+import { useStore } from '../../stores/user'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
