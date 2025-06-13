@@ -123,7 +123,35 @@ export const useStore = defineStore('user', () => {
         alert("error updating currency"+updateCurrencyError)
         return
       }
-    const {data: updateInventory,error:updateInventoryError}=await supabase
+      //check if item alr exists
+    const { data: existing, error: fetchError } = await supabase
+    .from('player_inventory')
+    .select('amount')
+    .eq('user_id', user.value!.id)
+    .eq('item_id', item.id)
+    .single()
+    console.log("existing"+existing)
+
+  if (fetchError && fetchError.code !== 'PGRST116') {
+    alert("Error checking inventory: " + fetchError.message)
+    return
+  }
+
+  if (existing) {
+    // if it exists, increment amount
+    const { error: updateError } = await supabase
+      .from('player_inventory')
+      .update({ amount: existing.amount + 1 })
+      .eq('user_id', user.value!.id)
+      .eq('item_id', item.id)
+
+    if (updateError) {
+      alert("Error updating inventory: " + updateError.message)
+      return
+    }
+  } else {
+    // if it doesn't exist, insert new row with amount 1
+    const { error: insertError } = await supabase
       .from('player_inventory')
       .insert({
         user_id: user.value!.id,
@@ -131,12 +159,52 @@ export const useStore = defineStore('user', () => {
         name: item.name,
         type: "powerup",
         description: item.description,
-        price: item.price
+        price: item.price,
+        amount: 1,
       })
-      if (updateInventoryError){
-        alert("error updating inventory"+updateInventoryError)
-        return
+
+    if (insertError) {
+      alert("Error inserting into inventory: " + insertError.message)
+      return
+    }
+  }
+  alert("Powerup successfully purchased!")
+  }
+
+  async function usePowerup(item: Powerup){
+    console.log("usepowerup function runnig")
+    const { data, error } = await supabase
+      .from('player_inventory')
+      .select('amount')
+      .eq('user_id', user.value?.id)
+      .eq('item_id', item.id)
+      .single()
+    console.log(data)
+    if (error || !data) {
+      alert('Powerup not found or error fetching it')
+      return
+    }
+    const newAmount = data.amount - 1
+    const { error: updateError } = await supabase
+        .from('player_inventory')
+        .update({ amount: newAmount })
+        .eq('user_id', user.value?.id)
+        .eq('item_id', item.id)
+      if (updateError) {
+        alert('Error updating powerup amount: ' + updateError.message)
       }
+    if (newAmount <= 0) {
+      //delete if 0
+      const { error: deleteError } = await supabase
+        .from('player_inventory')
+        .delete()
+        .eq('user_id', user.value?.id)
+        .eq('item_id', item.id)
+      if (deleteError) {
+        alert('Error deleting powerup: ' + deleteError.message)
+      }
+    }
+
   }
 
   return {
@@ -148,6 +216,7 @@ export const useStore = defineStore('user', () => {
     logIn,
     changeCoins,
     changeScore,
-    buyPowerup
+    buyPowerup,
+    usePowerup
   }
   })

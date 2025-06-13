@@ -41,11 +41,11 @@ const inventory = ref<Powerup[]>([])
 async function fetchInventory() {
   const { data, error } = await supabase
     .from('player_inventory')
-    .select('item_id, name, description, price')
+    .select('item_id, name, description, price, amount')
     .eq('user_id', user?.id)
 
   if (error) {
-    alert('Error fetching inventory:' + error)
+    alert('Error fetching inventory: ' + error.message)
     inventory.value = []
     return
   }
@@ -56,24 +56,11 @@ async function fetchInventory() {
       name: item.name,
       description: item.description,
       price: item.price,
+      amount: item.amount,
     }))
   } else {
     inventory.value = []
   }
-  inventory.value = groupItemsWithAmount(inventory.value)
-}
-
-function groupItemsWithAmount(items: Powerup[]) {
-  const map = new Map<number, Powerup & { amount: number }>()
-
-  for (const item of items) {
-    if (map.has(item.id)) {
-      map.get(item.id)!.amount += 1
-    } else {
-      map.set(item.id, { ...item, amount: 1 })
-    }
-  }
-  return Array.from(map.values())
 }
 onMounted(fetchInventory)
 </script>

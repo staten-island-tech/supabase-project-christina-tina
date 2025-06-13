@@ -16,11 +16,28 @@
       </div>
 
       <div v-else>
-        <div v-if="!questionError && currentQuestion">
-          <div class="text-center mb-4 text-gray-700 font-medium">
-            Question {{ currentIndex }} of {{ questionsData.length }}
+        <div v-if="!questionError && currentQuestion" class="flex flex-row">
+          <div>
+            <div class="text-center mb-4 text-gray-700 font-medium">
+              Question {{ currentIndex }} of {{ questionsData.length }}
+            </div>
+            <QuestionCard :question="currentQuestion" @answerSelected="handleAnswer" />
           </div>
-          <QuestionCard :question="currentQuestion" @answerSelected="handleAnswer" />
+          <!-- add powerup container here -->
+          <div>
+            <div class="text-center mb-4 text-gray-700 font-medium">Use Powerups</div>
+            <div class="ml-4 flex flex-row flex-wrap">
+              <button
+                v-for="powerup in powerups"
+                :key="powerup.id"
+                class="px-2 py-1 rounded mr-2 mb-2"
+                @click="handlePowerup(powerup, currentQuestion)"
+              >
+                {{ powerup.name }} ({{ powerup.amount }})
+              </button>
+            </div>
+            <div class="text-center">Results: {{ result }}</div>
+          </div>
         </div>
 
         <div v-else-if="questionError" class="text-red-600 font-semibold p-4">
@@ -49,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '../supabaseClient'
 import QuestionCard from './QuestionCard.vue'
@@ -150,6 +167,7 @@ async function startGame() {
   currentIndex.value = 0
   loading.value = true
 
+  await fetchPowerups()
   await getQuestionsAndAnswers()
   generateQuestion()
 
@@ -163,7 +181,7 @@ function handleAnswer(selectedAnswer: string) {
   if (selectedAnswer === currentQuestion.value.correct) {
     alert('Correct!')
     correctAnswersCount.value++
-    store.changeCoins(50)
+    store.changeCoins(20)
     store.changeScore(1)
   } else {
     alert('Wrong!')
@@ -173,15 +191,111 @@ function handleAnswer(selectedAnswer: string) {
   generateQuestion()
 }
 
+import type { Powerup } from '@/types'
+import { random } from 'gsap'
+const powerups = ref<Powerup[]>([])
 async function fetchPowerups() {
   const { data, error } = await supabase
     .from('player_inventory')
-    .select('item_id, name, description, price')
+    .select('item_id, name, description, price, amount')
     .eq('user_id', user?.id)
-
   if (error) {
-    console.error('Error fetching inventory:', error)
+    alert('Error fetching powerups: ' + error.message)
+    powerups.value = []
     return
   }
+  if (data) {
+    powerups.value = data.map((item) => ({
+      id: item.item_id,
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      amount: item.amount,
+    }))
+  } else {
+    powerups.value = []
+  }
 }
+const result = ref('')
+async function handlePowerup(powerup: Powerup, currentQuestion: DisplayQuestion) {
+  store.changeCoins(-powerup.price)
+  if (powerup.name === '50/50') {
+    let wrongs = currentQuestion.choices.filter((i) => i !== currentQuestion.correct)
+    function getTwoRandomItems(array: string[]) {
+      // create copy
+      const copy = array.slice()
+      // shuffle copy
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[copy[i], copy[j]] = [copy[j], copy[i]]
+      }
+      return copy.slice(0, 2)
+    }
+    const randomWrongs = getTwoRandomItems(wrongs)
+    result.value = `The answer is not ${randomWrongs[0]} or ${randomWrongs[1]}`
+  } else if (powerup.name === 'Skip Question') {
+    generateQuestion()
+  } else if (powerup.name === 'Double Points') {
+    store.changeCoins(40)
+    result.value = 'you got 40 coins instead of 20 !!'
+  } else if (powerup.name === 'Reveal Letter') {
+    const randomIndex = Math.floor(Math.random() * currentQuestion.correct.length)
+    const randomLetter = currentQuestion.correct[randomIndex]
+    result.value = `The answer has the letter "${randomLetter}" in it`
+  } else if (powerup.name === 'Score Surge') {
+    store.changeCoins(50)
+    result.value = 'You got 50 extra coins !!'
+  } else if (powerup.name === 'Mystery Box') {
+    const randomInt = Math.floor(Math.random() * 41) - 20 //random integer from -20 to 20
+    store.changeCoins(randomInt)
+    result.value = `You got ${randomInt} coins !!`
+  } else if (powerup.name === 'Steal') {
+    await useStealPowerup()
+  }
+  store.usePowerup(powerup)
+}
+
+async function useStealPowerup() {
+  if (!user) return
+
+  // get all users except the current one
+  const { data: others, error } = await supabase
+    .from('users')
+    .select('id, username, currency')
+    .neq('id', user.id)
+
+  if (error || !others?.length) {
+    alert('No users to steal from!')
+    return
+  }
+
+  // pick one randomly
+  const target = others[Math.floor(Math.random() * others.length)]
+  const amountToSteal = Math.floor(Math.random() * 21) + 10 // 10–30
+
+  // if amountToSteal is > the target's, steal all; if it's within, steal the amountToSteal
+  const stealAmount = Math.min(target.currency, amountToSteal)
+
+  if (stealAmount <= 0) {
+    alert(`${target.username} has nothing to steal, they're too broke haha`)
+    return
+  }
+
+  // subtract from target
+  const { error: deductError } = await supabase
+    .from('users')
+    .update({ currency: target.currency - stealAmount })
+    .eq('id', target.id)
+
+  // add to current user
+  store.changeCoins(stealAmount)
+
+  if (deductError) {
+    alert('something went wrong trying to steal')
+    return
+  }
+
+  result.value = `You stole ${stealAmount} coins from ${target.username}!`
+}
+onMounted(fetchPowerups)
 </script>
