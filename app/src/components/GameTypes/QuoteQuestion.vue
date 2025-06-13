@@ -30,7 +30,7 @@
               <button
                 v-for="powerup in powerups"
                 :key="powerup.id"
-                class="px-2 py-1 rounded mr-2 mb-2"
+                class="px-2 py-1 rounded mr-2 mb-2 btn"
                 @click="handlePowerup(powerup, currentQuestion)"
               >
                 {{ powerup.name }} ({{ powerup.amount }})
