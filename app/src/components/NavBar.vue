@@ -49,7 +49,6 @@
         <li><RouterLink to="/signin">Signin/Login</RouterLink></li>
         <li><RouterLink to="/profile">Profile</RouterLink></li>
         <li><RouterLink to="/stats">View Stats</RouterLink></li>
-        <li><a>something</a></li>
         <li><a>Log Out</a></li>
       </ul>
     </div>
