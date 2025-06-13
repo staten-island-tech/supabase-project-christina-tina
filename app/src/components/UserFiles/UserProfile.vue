@@ -1,11 +1,6 @@
 <template>
   <div class="w-[80vw] max-w-2xl mx-auto px-4 py-8">
     <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">User Profile</h2>
-    <div class="avatar">
-      <div class="w-24 rounded-full">
-        <img src="/profile_icon.png" alt="user profile picture" />
-      </div>
-    </div>
     <div class="space-y-6 text-center">
       <div>
         <h3 class="text-lg font-semibold text-gray-600">Username</h3>
@@ -32,8 +27,16 @@
       </div>
     </div>
   </div>
-  <h2>Inventory</h2>
-  <InventoryItem v-for="item in inventory" :key="item.id" :item="item" :amount="item.amount || 0" />
+  <h2 class="text-2xl text-center font-bold mb-2">Inventory</h2>
+  <div class="flex flex-row flex-wrap mx-auto w-[80vw]">
+    <InventoryItem
+      v-for="item in inventory"
+      :key="item.id"
+      :item="item"
+      :amount="item.amount || 0"
+    />
+  </div>
+
   <!-- <h2 class="text-2xl font-bold mb-4">🏅 Your Achievement Badges</h2> -->
 </template>
 

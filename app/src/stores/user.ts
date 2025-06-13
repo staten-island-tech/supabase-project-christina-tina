@@ -168,7 +168,6 @@ export const useStore = defineStore('user', () => {
       return
     }
   }
-  alert("Powerup successfully purchased!")
   }
 
   async function usePowerup(item: Powerup){
