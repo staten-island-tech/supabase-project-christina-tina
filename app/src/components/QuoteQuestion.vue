@@ -232,7 +232,7 @@ async function handlePowerup(powerup: Powerup, currentQuestion: DisplayQuestion)
       return copy.slice(0, 2)
     }
     const randomWrongs = getTwoRandomItems(wrongs)
-    result.value = `The answer is not ${randomWrongs[0]} or ${randomWrongs[1]}`
+    result.value = `The answer is not "${randomWrongs[0]}" or "${randomWrongs[1]}"`
   } else if (powerup.name === 'Skip Question') {
     generateQuestion()
   } else if (powerup.name === 'Double Points') {
@@ -251,6 +251,14 @@ async function handlePowerup(powerup: Powerup, currentQuestion: DisplayQuestion)
     result.value = `You got ${randomInt} coins !!`
   } else if (powerup.name === 'Steal') {
     await useStealPowerup()
+  }
+  powerup.amount -= 1
+
+  //filter out powerups with zero amount
+  if (powerup.amount <= 0) {
+    /* const index = powerups.findIndex((p) => p.id === powerup.id)
+    if (index !== -1) powerups.splice(index, 1) */
+    powerups.value = powerups.value.filter((i) => i !== powerup)
   }
   store.usePowerup(powerup)
 }

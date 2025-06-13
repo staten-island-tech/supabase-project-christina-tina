@@ -17,7 +17,7 @@ interface Powerup {
     name: string
     description: string
     price: number
-    amount?:number
+    amount:number
 }
 
 export type {User, UserForm, Powerup}
