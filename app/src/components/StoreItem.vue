@@ -6,20 +6,21 @@
         {{ item?.description }}
       </p>
       <div class="card-actions justify-end">
-        <button class="btn btn-primary">Buy Now</button>
+        <button class="btn btn-primary" @click="store.buyPowerup(item)">Buy Now</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Powerup } from '@/types'
 import { useStore } from '../stores/user'
 const store = useStore()
 const user = store.user
 
-defineProps({
-  item: Object,
-})
+defineProps<{
+  item: Powerup
+}>()
 </script>
 
 <style scoped></style>

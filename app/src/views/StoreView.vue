@@ -10,7 +10,7 @@ import { onMounted, ref } from 'vue'
 import StoreItem from '@/components/StoreItem.vue'
 import type { Powerup } from '@/types'
 const items = ref<Powerup[] | null>([])
-async function getPowerups() {
+async function fetchPowerups() {
   const { data: powerups, error } = await supabase.from('powerups').select('*')
   if (error) {
     alert('error fetching powerups')
@@ -19,5 +19,5 @@ async function getPowerups() {
   items.value = powerups
   console.log(powerups)
 }
-onMounted(getPowerups)
+onMounted(fetchPowerups)
 </script>

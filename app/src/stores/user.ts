@@ -1,6 +1,6 @@
 import { ref, reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { User, UserForm } from '../types'
+import type { Powerup, User, UserForm } from '../types'
 import { supabase } from '../supabaseClient'
 
 export const useStore = defineStore('user', () => {
@@ -28,8 +28,6 @@ export const useStore = defineStore('user', () => {
       },
     })
 
-    console.log('Supabase signup result:', { data, error })
-
     if (error) {
       if (error.message.toLowerCase().includes('already registered')) {
         errorMessage.value = 'Email is already in use.'
@@ -53,7 +51,6 @@ export const useStore = defineStore('user', () => {
     email: email,
     password: password,
   })
-  console.log("loginData",loginData)
   if (error) {
     errorMessage.value = `Login error: ${error.message}`
     return errorMessage.value
@@ -62,10 +59,6 @@ export const useStore = defineStore('user', () => {
     errorMessage.value="Login failed: No user data returned"
     return errorMessage.value
   }
-  /* const { data: temp, error: userFetchError } = await supabase 
-    .from('users')
-    .select('*')
-    .eq('id', loginData.user.id) */
 
     const {data: temp, error: userFetchError} = await getUserByID(loginData.user.id) //temp is a list of all users with this id, should be array w one element - change var name later
 
@@ -76,15 +69,15 @@ export const useStore = defineStore('user', () => {
     isSignedIn.value = true
     
     user.value = {
+      id: temp[0].id,
       email: email,
       username: temp[0].username,
       currency: temp[0].currency,
       score: temp[0].score,
-      items: [],
     }
     
   }
-async function getUserByID(id:string) { //fetch user data from public users table, supabase.auth.getUser() fetches from auth users table
+    async function getUserByID(id:string) { 
       const {data, error} = await supabase
       .from('users')
       .select('*')
@@ -92,30 +85,59 @@ async function getUserByID(id:string) { //fetch user data from public users tabl
         return {data, error}
     }
   
-     async function addCoins(amount: number) {
+     async function changeCoins(amount: number) {
       user.value!.currency += amount
       const { data, error } = await supabase
-  .from('users')                   // table name
-  .update({ currency: user.value!.currency })  // column and new value
-  .eq('username', user.value!.username)                    // match row
-  if (error) {
-    alert("error updating coins"+error)
-    return
-  }
+        .from('users')               
+        .update({ currency: user.value!.currency })
+        .eq('id', user.value!.id)            
+      if (error) {
+        alert("error updating coins"+error)
+        return
+      }
     }
 
-    async function addScore(amount: number) {
+    async function changeScore(amount: number) {
       user.value!.score += amount
       const { data, error } = await supabase
-  .from('users')                   // table name
-  .update({ score: user.value!.score })  // column and new value
-  .eq('username', user.value!.username)                    // match row
-
-  if (error) {
-    alert("error updating score"+error)
-    return
-  }
+        .from('users')                  
+        .update({ score: user.value!.score })
+        .eq('id', user.value!.id)              
+      if (error) {
+        alert("error updating score"+error)
+        return
+      }
     }
+  
+  async function buyPowerup(item: Powerup){
+    if (user.value!.currency<item.price) {
+      alert("not enough coins, try again later")
+      return
+    }
+    user.value!.currency -= item.price
+    const { data: updateCurrency, error:updateCurrencyError } = await supabase
+        .from('users')                  
+        .update({ currency: user.value!.currency })
+        .eq('id', user.value!.id)              
+    if (updateCurrencyError) {
+        alert("error updating currency"+updateCurrencyError)
+        return
+      }
+    const {data: updateInventory,error:updateInventoryError}=await supabase
+      .from('player_inventory')
+      .insert({
+        user_id: user.value!.id,
+        item_id: item.id,
+        name: item.name,
+        type: "powerup",
+        description: item.description,
+        price: item.price
+      })
+      if (updateInventoryError){
+        alert("error updating inventory"+updateInventoryError)
+        return
+      }
+  }
 
   return {
     user,
@@ -124,7 +146,8 @@ async function getUserByID(id:string) { //fetch user data from public users tabl
     signOut,
     signUp,
     logIn,
-    addCoins,
-    addScore
+    changeCoins,
+    changeScore,
+    buyPowerup
   }
   })

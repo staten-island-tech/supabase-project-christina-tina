@@ -162,10 +162,11 @@ function handleAnswer(selectedAnswer: string) {
   if (selectedAnswer === currentQuestion.value.correct) {
     alert('Correct!')
     correctAnswersCount.value++
-    store.addCoins(50)
-    store.addScore(1)
+    store.changeCoins(50)
+    store.changeScore(1)
   } else {
     alert('Wrong!')
+    store.changeScore(-1)
   }
 
   generateQuestion()
