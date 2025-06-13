@@ -18,19 +18,19 @@
       <div v-else>
         <div v-if="!questionError && currentQuestion" class="flex flex-row">
           <div>
-            <div class="text-center mb-4 text-gray-700 font-medium">
+            <div class="text-center mb-4 font-medium">
               Question {{ currentIndex }} of {{ questionsData.length }}
             </div>
             <QuestionCard :question="currentQuestion" @answerSelected="handleAnswer" />
           </div>
           <!-- add powerup container here -->
           <div>
-            <div class="text-center mb-4 text-gray-700 font-medium">Use Powerups</div>
+            <div class="text-center mb-4 font-medium">Use Powerups</div>
             <div class="ml-4 flex flex-row flex-wrap">
               <button
                 v-for="powerup in powerups"
                 :key="powerup.id"
-                class="px-2 py-1 rounded mr-2 mb-2 btn"
+                class="px-2 py-1 rounded mr-2 mb-2 btn btn-secondary"
                 @click="handlePowerup(powerup, currentQuestion)"
               >
                 {{ powerup.name }} ({{ powerup.amount }})
