@@ -21,10 +21,5 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from '../stores/user'
-import { useRouter } from 'vue-router'
 import UserStats from '../components/UserFiles/UserStats.vue'
-
-const router = useRouter()
-const store = useStore()
 </script>
