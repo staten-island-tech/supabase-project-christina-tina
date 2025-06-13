@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <h2>Coins: {{ coins }}</h2>
     <div class="w-[80vw] flex flex-row flex-wrap items-center justify-center mx-auto mt-4">
       <StoreItem v-for="item in items || []" :key="item.id" :item="item" />
@@ -24,7 +24,6 @@ async function fetchPowerups() {
     return
   }
   items.value = powerups
-  console.log(powerups)
 }
 onMounted(fetchPowerups)
 </script>

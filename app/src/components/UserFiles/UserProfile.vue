@@ -1,7 +1,11 @@
 <template>
-  <div class="w-full max-w-2xl mx-auto px-4 py-8">
+  <div class="w-[80vw] max-w-2xl mx-auto px-4 py-8">
     <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">User Profile</h2>
-
+    <div class="avatar">
+      <div class="w-24 rounded-full">
+        <img src="/profile_icon.png" alt="user profile picture" />
+      </div>
+    </div>
     <div class="space-y-6 text-center">
       <div>
         <h3 class="text-lg font-semibold text-gray-600">Username</h3>
@@ -28,10 +32,47 @@
       </div>
     </div>
   </div>
+  <h2>Inventory</h2>
+  <InventoryItem v-for="item in inventory" :key="item.id" :item="item" :amount="item.amount || 0" />
+  <!-- <h2 class="text-2xl font-bold mb-4">🏅 Your Achievement Badges</h2> -->
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import { useStore } from '../../stores/user'
+import type { Powerup } from '@/types'
+import InventoryItem from './../InventoryItem.vue'
+import { supabase } from '../../supabaseClient'
 const store = useStore()
 const user = store.user
+const inventory = ref<Powerup[]>([])
+async function fetchInventory() {
+  if (!user) {
+    return
+  }
+  const { data, error } = await supabase
+    .from('player_inventory')
+    .select('item_id, name, description, price, amount')
+    .eq('user_id', user?.id)
+
+  if (error) {
+    alert('Error fetching inventory: ' + error.message)
+    inventory.value = []
+    return
+  }
+
+  if (data) {
+    inventory.value = data.map((item) => ({
+      id: item.item_id,
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      amount: item.amount,
+    }))
+  } else {
+    inventory.value = []
+  }
+}
+
+onMounted(fetchInventory)
 </script>
